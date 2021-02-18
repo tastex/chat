@@ -52,7 +52,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 extension OSLog {
     #if ENABLE_LIFECYCLE_LOG
     static let appDelegateLog: OSLog = .init(subsystem: "ru.vladimir-bolotov.Chat", category: "AppDelegate Lifecycle")
+    static let viewControllerLog: OSLog = .init(subsystem: "ru.vladimir-bolotov.Chat", category: "ViewController Lifecycle")
     #else
     static let appDelegateLog: OSLog = .disabled
+    static let viewControllerLog: OSLog = .disabled
     #endif
 }
