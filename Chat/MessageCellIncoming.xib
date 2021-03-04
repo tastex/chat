@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MessageCellIncoming" rowHeight="44" id="KGk-i7-Jjw" customClass="MessageCell" customModule="Chat" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="54"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="54"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NBA-5N-upl">
+                        <rect key="frame" x="16" y="8" width="240" height="38"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="LabelLabelLabelLabelLabelLabelLabel" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8JK-cx-Vfi">
+                                <rect key="frame" x="12" y="8" width="216" height="22"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="quaternaryLabelColor"/>
+                        <constraints>
+                            <constraint firstItem="8JK-cx-Vfi" firstAttribute="leading" secondItem="NBA-5N-upl" secondAttribute="leading" constant="12" id="28L-lZ-deN"/>
+                            <constraint firstAttribute="trailing" secondItem="8JK-cx-Vfi" secondAttribute="trailing" constant="12" id="SPP-YJ-XaZ"/>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="38" id="WkI-NN-mCj"/>
+                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="8JK-cx-Vfi" secondAttribute="bottom" constant="8" id="bgF-Qw-DhQ"/>
+                            <constraint firstItem="8JK-cx-Vfi" firstAttribute="top" secondItem="NBA-5N-upl" secondAttribute="top" constant="8" id="ecK-QC-ojS"/>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="44" id="oCI-iR-Cis"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="NBA-5N-upl" firstAttribute="width" relation="lessThanOrEqual" secondItem="H2p-sc-9uM" secondAttribute="width" multiplier="0.75" id="CLn-Pt-3Bi"/>
+                    <constraint firstAttribute="bottom" secondItem="NBA-5N-upl" secondAttribute="bottom" constant="8" id="T7Z-qj-xX5"/>
+                    <constraint firstItem="NBA-5N-upl" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="i7G-Os-0aC"/>
+                    <constraint firstItem="NBA-5N-upl" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="rh9-rd-Bj4"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="bobbleView" destination="NBA-5N-upl" id="JNc-J8-lMP"/>
+                <outlet property="messageLabel" destination="8JK-cx-Vfi" id="zt2-s6-heO"/>
+            </connections>
+            <point key="canvasLocation" x="92.753623188405811" y="127.90178571428571"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <systemColor name="quaternaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.17999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

@@ -7,14 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC285E0725F02A84008AFE06 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC285E0525F02A84008AFE06 /* MessageCell.swift */; };
+		BC285E0825F02A84008AFE06 /* MessageCellIncoming.xib in Resources */ = {isa = PBXBuildFile; fileRef = BC285E0625F02A84008AFE06 /* MessageCellIncoming.xib */; };
+		BC285E0B25F03873008AFE06 /* MessageCellOutgoing.xib in Resources */ = {isa = PBXBuildFile; fileRef = BC285E0A25F03873008AFE06 /* MessageCellOutgoing.xib */; };
 		BC3DF47225DDADD3004A8F91 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC3DF47125DDADD3004A8F91 /* AppDelegate.swift */; };
 		BC3DF47625DDADD3004A8F91 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC3DF47525DDADD3004A8F91 /* ProfileViewController.swift */; };
 		BC3DF47925DDADD3004A8F91 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC3DF47725DDADD3004A8F91 /* Main.storyboard */; };
 		BC3DF47B25DDADD4004A8F91 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BC3DF47A25DDADD4004A8F91 /* Assets.xcassets */; };
 		BC3DF47E25DDADD4004A8F91 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC3DF47C25DDADD4004A8F91 /* LaunchScreen.storyboard */; };
+		BCC0974325EEC0DC00C63BF7 /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCC0974225EEC0DC00C63BF7 /* ConversationViewController.swift */; };
+		BCC0976C25F007AC00C63BF7 /* ConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCC0976A25F007AC00C63BF7 /* ConversationCell.swift */; };
+		BCC0976D25F007AC00C63BF7 /* ConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCC0976B25F007AC00C63BF7 /* ConversationCell.xib */; };
+		BCF7003725EB9BF900707D65 /* ConversationsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF7003625EB9BF900707D65 /* ConversationsListViewController.swift */; };
+		BCF7003A25EBEFDE00707D65 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF7003925EBEFDE00707D65 /* UserProfile.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BC285E0525F02A84008AFE06 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
+		BC285E0625F02A84008AFE06 /* MessageCellIncoming.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageCellIncoming.xib; sourceTree = "<group>"; };
+		BC285E0A25F03873008AFE06 /* MessageCellOutgoing.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageCellOutgoing.xib; sourceTree = "<group>"; };
 		BC3DF46E25DDADD3004A8F91 /* Chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC3DF47125DDADD3004A8F91 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BC3DF47525DDADD3004A8F91 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -22,6 +33,11 @@
 		BC3DF47A25DDADD4004A8F91 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BC3DF47D25DDADD4004A8F91 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BC3DF47F25DDADD4004A8F91 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BCC0974225EEC0DC00C63BF7 /* ConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewController.swift; sourceTree = "<group>"; };
+		BCC0976A25F007AC00C63BF7 /* ConversationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCell.swift; sourceTree = "<group>"; };
+		BCC0976B25F007AC00C63BF7 /* ConversationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationCell.xib; sourceTree = "<group>"; };
+		BCF7003625EB9BF900707D65 /* ConversationsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListViewController.swift; sourceTree = "<group>"; };
+		BCF7003925EBEFDE00707D65 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +71,14 @@
 			isa = PBXGroup;
 			children = (
 				BC3DF47125DDADD3004A8F91 /* AppDelegate.swift */,
+				BCF7003925EBEFDE00707D65 /* UserProfile.swift */,
+				BCF7003625EB9BF900707D65 /* ConversationsListViewController.swift */,
+				BCC0976A25F007AC00C63BF7 /* ConversationCell.swift */,
+				BCC0976B25F007AC00C63BF7 /* ConversationCell.xib */,
+				BCC0974225EEC0DC00C63BF7 /* ConversationViewController.swift */,
+				BC285E0525F02A84008AFE06 /* MessageCell.swift */,
+				BC285E0625F02A84008AFE06 /* MessageCellIncoming.xib */,
+				BC285E0A25F03873008AFE06 /* MessageCellOutgoing.xib */,
 				BC3DF47525DDADD3004A8F91 /* ProfileViewController.swift */,
 				BC3DF47725DDADD3004A8F91 /* Main.storyboard */,
 				BC3DF47A25DDADD4004A8F91 /* Assets.xcassets */,
@@ -121,7 +145,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BC285E0825F02A84008AFE06 /* MessageCellIncoming.xib in Resources */,
+				BCC0976D25F007AC00C63BF7 /* ConversationCell.xib in Resources */,
 				BC3DF47E25DDADD4004A8F91 /* LaunchScreen.storyboard in Resources */,
+				BC285E0B25F03873008AFE06 /* MessageCellOutgoing.xib in Resources */,
 				BC3DF47B25DDADD4004A8F91 /* Assets.xcassets in Resources */,
 				BC3DF47925DDADD3004A8F91 /* Main.storyboard in Resources */,
 			);
@@ -134,8 +161,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCF7003A25EBEFDE00707D65 /* UserProfile.swift in Sources */,
 				BC3DF47625DDADD3004A8F91 /* ProfileViewController.swift in Sources */,
+				BCC0976C25F007AC00C63BF7 /* ConversationCell.swift in Sources */,
+				BCC0974325EEC0DC00C63BF7 /* ConversationViewController.swift in Sources */,
 				BC3DF47225DDADD3004A8F91 /* AppDelegate.swift in Sources */,
+				BCF7003725EB9BF900707D65 /* ConversationsListViewController.swift in Sources */,
+				BC285E0725F02A84008AFE06 /* MessageCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

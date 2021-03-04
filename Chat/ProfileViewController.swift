@@ -17,7 +17,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
 
     @IBAction func imageTap(_ sender: Any) {
 
-        let alert = UIAlertController(title: nil, message: "Change Profile Pogo", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: nil, message: "Change Profile Logo", preferredStyle: .actionSheet)
         alert.addAction(.init(title: "Chose Photo", style: .default) { [self]_ in
             showImagePicker(sourceType: .photoLibrary)
         })
@@ -32,6 +32,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
 
     required init?(coder: NSCoder) {
         super .init(coder: coder)
+        title = "Profile"
         print("\(#function) - Button frame: \(String(describing: editButton?.frame))")
         // На момент инициализации ProfileViewController — editButton еще не инициализирована, поэтому не известен и frame кнопки
     }
@@ -42,6 +43,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
         imagePickerController.delegate = self
 
         if let imageView = profileImageView {
+            imageView.image = UserProfile.defaultProfile.image
             imageView.layer.cornerRadius = imageView.frame.width / 2
         }
 
@@ -49,7 +51,15 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
         if #available(iOS 13.0, *) {
             editButton?.layer.cornerCurve = .continuous
         }
+
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneButtonTap(_:)))
+
         print("\(#function) - Button frame: \(String(describing: editButton?.frame))")
+    }
+
+    @objc
+    func doneButtonTap(_ sender: Any) {
+        self.dismiss(animated: true)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -59,6 +69,14 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
         // В методе viewDidAppear frame у editButton высчитан относительно ее констрейнтов и размера текущего устройства
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let presentingViewController = self.presentingViewController?.children.first as? ConversationsListViewController {
+            if let profileView = presentingViewController.navigationItem.rightBarButtonItem?.customView as? UIImageView {
+                profileView.image = UserProfile.defaultProfile.image?.copy(newSize: CGSize(width: 40, height: 40))
+            }
+        }
+    }
 }
 
 extension ProfileViewController: UIImagePickerControllerDelegate {
@@ -100,7 +118,10 @@ extension ProfileViewController: UIImagePickerControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
         if let image = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.editedImage)] as? UIImage {
-            self.profileImageView?.image = image
+
+            UserProfile.defaultProfile.image = image
+            self.profileImageView?.image = UserProfile.defaultProfile.image
+
             dismiss(animated: true)
         }
     }
