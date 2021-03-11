@@ -15,6 +15,7 @@ class ThemesViewController: UIViewController {
 
     var themeViews = Array<SelectableView>()
     weak var themePickerDelegate: ThemesPickerDelegate?
+    var themeChangeHandler: ((_ theme: Theme, _ viewController: UIViewController) -> Void)?
 
     required init?(coder: NSCoder) {
         super .init(coder: coder)
@@ -43,9 +44,15 @@ class ThemesViewController: UIViewController {
         if let selectableView = themeViews.first(where: { $0.tag == theme.rawValue }) {
             selectableView.select()
         }
-        themePickerDelegate?.didSelectTheme(theme)
-        UIView.animate(withDuration: 0.7, delay: 0, options: [.allowUserInteraction, .curveEaseInOut]) {
-            self.themePickerDelegate?.updateAppearance(viewController: self)
+        if let themePickerDelegate = themePickerDelegate {
+            themePickerDelegate.didSelectTheme(theme)
+            UIView.animate(withDuration: 0.7, delay: 0, options: [.allowUserInteraction, .curveEaseInOut]) {
+                themePickerDelegate.updateAppearance(viewController: self)
+            }
+        } else if let themeChangeHandler = themeChangeHandler {
+            UIView.animate(withDuration: 0.7, delay: 0, options: [.allowUserInteraction, .curveEaseInOut]) {
+                themeChangeHandler(theme, self)
+            }
         }
     }
 
