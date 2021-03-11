@@ -55,7 +55,7 @@ class ConversationsListViewController: UITableViewController {
     func settingsButtonTap() {
         guard let themesVC = UIStoryboard(name: "Main", bundle: .main)
                 .instantiateViewController(withIdentifier: String(describing: ThemesViewController.self)) as? ThemesViewController else { return }
-        themesVC.delegate = themeController
+        themesVC.themePickerDelegate = themeController
         self.navigationController?.pushViewController(themesVC, animated: true)
     }
 

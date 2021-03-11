@@ -14,7 +14,7 @@ class ThemesViewController: UIViewController {
     @IBOutlet weak var bottomThemeContainer: UIView!
 
     var themeViews = Array<SelectableView>()
-    weak var delegate: ThemesPickerDelegate?
+    weak var themePickerDelegate: ThemesPickerDelegate?
 
     required init?(coder: NSCoder) {
         super .init(coder: coder)
@@ -43,9 +43,9 @@ class ThemesViewController: UIViewController {
         if let selectableView = themeViews.first(where: { $0.tag == theme.rawValue }) {
             selectableView.select()
         }
-        delegate?.didSelectTheme(theme)
+        themePickerDelegate?.didSelectTheme(theme)
         UIView.animate(withDuration: 0.7, delay: 0, options: [.allowUserInteraction, .curveEaseInOut]) {
-            self.delegate?.updateAppearance(viewController: self)
+            self.themePickerDelegate?.updateAppearance(viewController: self)
         }
     }
 
