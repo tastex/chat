@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -12,7 +12,7 @@
         <!--Profile View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ProfileViewController" customModule="Chat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ProfileViewController" id="BYZ-38-t0r" customClass="ProfileViewController" customModule="Chat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -40,13 +40,13 @@
                                     <outletCollection property="gestureRecognizers" destination="m2L-Q0-IrO" appends="YES" id="nCM-SQ-7Js"/>
                                 </connections>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Marina Dudarenko" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Z4-ja-J5f">
-                                <rect key="frame" x="85" y="286" width="205" height="29"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Marina Dudarenko" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Z4-ja-J5f">
+                                <rect key="frame" x="85.5" y="286" width="204.5" height="29"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="UX/UI designer, web-designer Moscow, Russia" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MIw-mw-NXK">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="UX/UI designer, web-designer Moscow, Russia" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MIw-mw-NXK">
                                 <rect key="frame" x="67.5" y="333" width="240" height="38.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <nil key="textColor"/>
@@ -56,7 +56,7 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="MIw-mw-NXK" firstAttribute="top" secondItem="7Z4-ja-J5f" secondAttribute="bottom" constant="18" id="40w-qc-hGD"/>
+                            <constraint firstItem="7Z4-ja-J5f" firstAttribute="width" relation="lessThanOrEqual" secondItem="xBj-Uf-u5z" secondAttribute="width" multiplier="1.5" id="6v1-KZ-7bt"/>
                             <constraint firstItem="7Z4-ja-J5f" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="MF4-Dd-a2P"/>
                             <constraint firstItem="xBj-Uf-u5z" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="QXV-hg-GXm"/>
                             <constraint firstItem="xBj-Uf-u5z" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="RUC-El-ncd"/>
@@ -64,12 +64,15 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="X3C-7U-YQj" secondAttribute="trailing" constant="56" id="Yt3-65-qCd"/>
                             <constraint firstItem="X3C-7U-YQj" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="56" id="aYH-UI-lQ1"/>
                             <constraint firstItem="X3C-7U-YQj" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="aca-8b-nlN"/>
+                            <constraint firstItem="X3C-7U-YQj" firstAttribute="top" relation="greaterThanOrEqual" secondItem="MIw-mw-NXK" secondAttribute="bottom" constant="8" id="bnI-nv-3uM"/>
+                            <constraint firstItem="MIw-mw-NXK" firstAttribute="top" secondItem="7Z4-ja-J5f" secondAttribute="bottom" constant="18" id="l3K-Ng-boV"/>
                             <constraint firstItem="MIw-mw-NXK" firstAttribute="leading" secondItem="xBj-Uf-u5z" secondAttribute="leading" id="leq-Ap-ubv"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="X3C-7U-YQj" secondAttribute="bottom" constant="20" id="qbS-kc-jeR"/>
                             <constraint firstItem="MIw-mw-NXK" firstAttribute="trailing" secondItem="xBj-Uf-u5z" secondAttribute="trailing" id="tqZ-Ra-XNh"/>
                             <constraint firstItem="X3C-7U-YQj" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="vmX-pV-h7k"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="6R7-7k-cLZ"/>
                     <connections>
                         <outlet property="editButton" destination="X3C-7U-YQj" id="KU4-KB-IlF"/>
                         <outlet property="profileImageView" destination="xBj-Uf-u5z" id="nva-rY-j2D"/>
@@ -82,7 +85,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-196" y="32.833583208395808"/>
+            <point key="canvasLocation" x="743.20000000000005" y="32.833583208395808"/>
         </scene>
     </scenes>
     <resources>

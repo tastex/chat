@@ -23,6 +23,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
+        let conversationsListVC = ConversationsListViewController(style: .grouped)
+        let navigationVC = UINavigationController(rootViewController: conversationsListVC)
+        navigationVC.navigationBar.prefersLargeTitles = true
+        
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        self.window?.rootViewController = navigationVC
+        self.window?.makeKeyAndVisible()
+
         logStateChange("inactive")
 
         return true
