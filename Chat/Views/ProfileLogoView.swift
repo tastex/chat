@@ -18,7 +18,6 @@ class ProfileLogoView: UIView {
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        //configure()
     }
 
     func configure() {

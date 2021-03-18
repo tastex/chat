@@ -23,8 +23,6 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
         }
     }
 
-
-
     var image: UIImage? {
         didSet {
             logoContainerView?.configure()
@@ -131,6 +129,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     }
 
     func updateButtonVisibility() {
+        isSavingData = false
         activityIndicator.stopAnimating()
         [editButton, cancelButton, saveGCDButton, saveOperationsButton].forEach { button in
             if let button = button {
@@ -139,24 +138,39 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
         }
     }
 
+    private var isSavingData = false {
+        didSet {
+            saveGCDButton.isEnabled = !isSavingData
+            saveOperationsButton.isEnabled = !isSavingData
+            logoContainerView?.isUserInteractionEnabled = !isSavingData
+            nameTextView.isEditable = !isSavingData
+            bioTextView.isEditable = !isSavingData
+        }
+    }
+
     @IBAction func editButtonTap(_ sender: Any) {
+        updateButtonVisibility()
         nameTextView.isEditable = true
         bioTextView.isEditable = true
-        updateButtonVisibility()
     }
 
     @IBAction func cancelButtonTap(_ sender: Any) {
+        updateButtonVisibility()
         nameTextView.isEditable = false
         bioTextView.isEditable = false
-        updateButtonVisibility()
+
     }
 
     @IBAction func saveGCDButtonTap(_ sender: Any) {
         activityIndicator.startAnimating()
+        isSavingData = true
+        print(#function)
     }
 
     @IBAction func saveOperationsButtonTap(_ sender: Any) {
         activityIndicator.startAnimating()
+        isSavingData = true
+        print(#function)
     }
 
 }

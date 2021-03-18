@@ -12,7 +12,6 @@
 		BC285E0825F02A84008AFE06 /* MessageCellIncoming.xib in Resources */ = {isa = PBXBuildFile; fileRef = BC285E0625F02A84008AFE06 /* MessageCellIncoming.xib */; };
 		BC285E0B25F03873008AFE06 /* MessageCellOutgoing.xib in Resources */ = {isa = PBXBuildFile; fileRef = BC285E0A25F03873008AFE06 /* MessageCellOutgoing.xib */; };
 		BC3DF47225DDADD3004A8F91 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC3DF47125DDADD3004A8F91 /* AppDelegate.swift */; };
-		BC3DF47625DDADD3004A8F91 /* ProfileViewController_old.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC3DF47525DDADD3004A8F91 /* ProfileViewController_old.swift */; };
 		BC3DF47925DDADD3004A8F91 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC3DF47725DDADD3004A8F91 /* Main.storyboard */; };
 		BC3DF47B25DDADD4004A8F91 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BC3DF47A25DDADD4004A8F91 /* Assets.xcassets */; };
 		BC3DF47E25DDADD4004A8F91 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC3DF47C25DDADD4004A8F91 /* LaunchScreen.storyboard */; };
@@ -35,7 +34,6 @@
 		BC285E0A25F03873008AFE06 /* MessageCellOutgoing.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageCellOutgoing.xib; sourceTree = "<group>"; };
 		BC3DF46E25DDADD3004A8F91 /* Chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC3DF47125DDADD3004A8F91 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		BC3DF47525DDADD3004A8F91 /* ProfileViewController_old.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController_old.swift; sourceTree = "<group>"; };
 		BC3DF47825DDADD3004A8F91 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		BC3DF47A25DDADD4004A8F91 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BC3DF47D25DDADD4004A8F91 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -84,7 +82,6 @@
 			children = (
 				BCF7003625EB9BF900707D65 /* ConversationsListViewController.swift */,
 				BCC0974225EEC0DC00C63BF7 /* ConversationViewController.swift */,
-				BC3DF47525DDADD3004A8F91 /* ProfileViewController_old.swift */,
 				BC1015DD2601B4EB006F63AC /* ProfileViewController.swift */,
 				BC77954F25F80D0300914386 /* ThemesViewController.swift */,
 			);
@@ -197,7 +194,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				BCF7003A25EBEFDE00707D65 /* UserProfile.swift in Sources */,
-				BC3DF47625DDADD3004A8F91 /* ProfileViewController_old.swift in Sources */,
 				BC77955025F80D0300914386 /* ThemesViewController.swift in Sources */,
 				BC77955A25F8364D00914386 /* ThemeAppearanceView.swift in Sources */,
 				BCC0976C25F007AC00C63BF7 /* ConversationCell.swift in Sources */,

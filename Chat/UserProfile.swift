@@ -48,11 +48,7 @@ class UserProfile: UserProfileProtocol {
         self.conversations = conversations
     }
 
-//    static var defaultProfile = UserProfile(conversations: fakeConversations())
-//    static var defaultProfile = UserProfile(name: "Vladimir Bolotov", conversations: fakeConversations())
     static var defaultProfile = UserProfile(name: "Vladimir Bolotov", bio: "iOS dev", conversations: fakeConversations())
-//    static var defaultProfile = UserProfile(image: UIImage(named: "DefaultImage"), conversations: fakeConversations())
-//    static var defaultProfile = UserProfile(image: UIImage(named: "DefaultProfileImage"), conversations: fakeConversations())
 
     class Conversation {
         var name: String?
