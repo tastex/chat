@@ -29,14 +29,9 @@ class ConversationsListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let navBarImageSize = CGSize(width: 40, height: 40)
-        let profileView = UIImageView(image: UserProfile.defaultProfile.image?.copy(newSize: navBarImageSize))
-        profileView.layer.cornerRadius = navBarImageSize.width / 2
-        profileView.layer.masksToBounds = true
-
+        let profileView = ProfileLogoView(frame: CGRect(origin: .zero, size: CGSize(width: 40, height: 40)))
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(profileButtonTap(_:)))
         profileView.addGestureRecognizer(tapGestureRecognizer)
-
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: profileView)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "SettingsIcon"), style: .plain, target: self, action: #selector(settingsButtonTap))
     }
@@ -46,6 +41,8 @@ class ConversationsListViewController: UITableViewController {
         guard let profileVC = UIStoryboard(name: "Main", bundle: .main)
             .instantiateViewController(withIdentifier: String(describing: ProfileViewController.self)) as? ProfileViewController
         else { return }
+        profileVC.setProfile(profile: UserProfile.defaultProfile)
+
         let navigationVC = UINavigationController(rootViewController: profileVC)
         navigationVC.navigationBar.prefersLargeTitles = true
         self.navigationController?.present(navigationVC, animated: true, completion: nil)

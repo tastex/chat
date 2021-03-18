@@ -8,19 +8,51 @@
 import Foundation
 import UIKit
 
-class UserProfile {
+protocol UserProfileProtocol {
+    var image: UIImage?  { get set }
+    var name: String? { get set }
+    var bio: String? { get set }
+    var nameInitials: String { get }
+    var nameInitialsBackgroundColor: UIColor { get }
+}
 
+class UserProfile: UserProfileProtocol {
     var image: UIImage?
+    var name: String?
+    var bio: String?
+
+    var nameInitials: String {
+        if let name = name {
+            let formatter = PersonNameComponentsFormatter()
+            if let components = formatter.personNameComponents(from: name) {
+                formatter.style = .abbreviated
+                return formatter.string(from: components)
+            }
+        }
+        return "🐶"
+    }
+
+    var nameInitialsBackgroundColor: UIColor {
+        UIColor(red: 0.894, green: 0.908, blue: 0.17, alpha: 1)
+    }
+
     var conversations: [Conversation]
+    
     var onlineConversations: [Conversation] { conversations.filter { $0.online } }
     var offlineConversations: [Conversation] { conversations.filter { !$0.online } }
 
-    init(image: UIImage?, conversations: [Conversation] = []) {
+    init(name: String? = nil, bio: String? = nil, image: UIImage? = nil, conversations: [Conversation] = []) {
+        self.name = name
+        self.bio = bio
         self.image = image
         self.conversations = conversations
     }
 
-    static var defaultProfile = UserProfile(image: UIImage(named: "DefaultProfileImage"), conversations: fakeConversations())
+//    static var defaultProfile = UserProfile(conversations: fakeConversations())
+//    static var defaultProfile = UserProfile(name: "Vladimir Bolotov", conversations: fakeConversations())
+    static var defaultProfile = UserProfile(name: "Vladimir Bolotov", bio: "iOS dev", conversations: fakeConversations())
+//    static var defaultProfile = UserProfile(image: UIImage(named: "DefaultImage"), conversations: fakeConversations())
+//    static var defaultProfile = UserProfile(image: UIImage(named: "DefaultProfileImage"), conversations: fakeConversations())
 
     class Conversation {
         var name: String?
