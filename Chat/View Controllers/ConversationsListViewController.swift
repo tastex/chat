@@ -16,7 +16,7 @@ class ConversationsListViewController: UITableViewController {
     override init(style: UITableView.Style) {
         super.init(style: style)
         
-        title = "Tinkoff Chat"
+        title = "Channels"
         tableView.register(UINib(nibName: String(describing: ConversationCell.self), bundle: nil), forCellReuseIdentifier: cellIdentifier)
         tableView.dataSource = self
         tableView.delegate = self
@@ -32,8 +32,23 @@ class ConversationsListViewController: UITableViewController {
         let profileView = ProfileLogoView(frame: CGRect(origin: .zero, size: CGSize(width: 40, height: 40)))
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(profileButtonTap(_:)))
         profileView.addGestureRecognizer(tapGestureRecognizer)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: profileView)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "SettingsIcon"), style: .plain, target: self, action: #selector(settingsButtonTap))
+        let profileBarButtonItem = UIBarButtonItem(customView: profileView)
+
+        let newChannelButton = UIBarButtonItem(image: UIImage(named: "square.and.pencil"), style: .plain, target: self, action: #selector(newChannelButtonTap))
+        self.navigationItem.rightBarButtonItems = [profileBarButtonItem, newChannelButton]
+
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "gear"), style: .plain, target: self, action: #selector(settingsButtonTap))
+    }
+
+    @objc
+    func newChannelButtonTap() {
+        let alert = UIAlertController(title: "Create New Channel", message: nil, preferredStyle: .alert)
+        alert.addTextField { $0.placeholder = "Channel name..." }
+        alert.addAction(.init(title: "Cancel", style: .cancel))
+        alert.addAction(.init(title: "Create", style: .default, handler: { (action) in
+            print("New channel named — \(String(describing: alert.textFields?.first?.text)) created")
+        }))
+        present(alert, animated: true, completion: nil)
     }
 
     @objc
@@ -62,22 +77,8 @@ class ConversationsListViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
-    }
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 1 {
-            return UserProfile.defaultProfile.offlineConversations.count
-        }
         return UserProfile.defaultProfile.onlineConversations.count
-    }
-
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 1 {
-            return "History"
-        }
-        return "Online"
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

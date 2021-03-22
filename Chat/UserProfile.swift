@@ -17,6 +17,7 @@ protocol UserProfileProtocol {
 }
 
 class UserProfile: UserProfileProtocol {
+    let id: String
     var image: UIImage?
     var name: String?
     var bio: String?
@@ -41,14 +42,26 @@ class UserProfile: UserProfileProtocol {
     var onlineConversations: [Conversation] { conversations.filter { $0.online } }
     var offlineConversations: [Conversation] { conversations.filter { !$0.online } }
 
-    init(name: String? = nil, bio: String? = nil, image: UIImage? = nil, conversations: [Conversation] = []) {
+    init(id: String, name: String? = nil, bio: String? = nil, image: UIImage? = nil, conversations: [Conversation] = []) {
+        self.id = id
         self.name = name
         self.bio = bio
         self.image = image
         self.conversations = conversations
     }
 
-    static var defaultProfile = UserProfile(name: "Vladimir Bolotov", bio: "iOS dev", conversations: fakeConversations())
+    static var defaultProfile: UserProfile {
+        let name = "Vladimir Bolotov"
+        let bio = "Tinkoff fintech student"
+        let idKey = "UserID"
+        if let userId = UserDefaults().string(forKey: idKey) {
+            return UserProfile(id: userId, name: name, bio: bio, conversations: fakeConversations())
+        } else {
+            let userId = UUID().uuidString
+            UserDefaults().set(userId, forKey: idKey)
+            return UserProfile(id: userId, name: name, bio: bio, conversations: fakeConversations())
+        }
+    }
 
     class Conversation {
         var name: String?
