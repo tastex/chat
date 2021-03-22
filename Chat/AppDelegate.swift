@@ -26,7 +26,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let conversationsListVC = ConversationsListViewController(style: .grouped)
         let navigationVC = UINavigationController(rootViewController: conversationsListVC)
         navigationVC.navigationBar.prefersLargeTitles = true
-        
         self.window = UIWindow(frame: UIScreen.main.bounds)
         self.window?.rootViewController = navigationVC
         self.window?.makeKeyAndVisible()

@@ -46,7 +46,7 @@ enum Theme: Int, CaseIterable {
 
     var title: String {
         switch self {
-    case .classic:
+        case .classic:
             return "Classic"
         case .day:
             return "Day"

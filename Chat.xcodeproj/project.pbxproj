@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -82,7 +82,6 @@
 				7DC51D44D6F851C84511C1EF /* Pods-Chat.debug.xcconfig */,
 				63EBE8C4CF755891403D395D /* Pods-Chat.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -159,6 +158,7 @@
 				BC3DF46B25DDADD3004A8F91 /* Frameworks */,
 				BC3DF46C25DDADD3004A8F91 /* Resources */,
 				9E8FE5201AFD90FAC809F4C1 /* [CP] Embed Pods Frameworks */,
+				BC69919C2609451C00D1D2EB /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -236,6 +236,23 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Chat/Pods-Chat-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		BC69919C2609451C00D1D2EB /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint autocorrect && swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 		D05510ADBCF2508C1056B212 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

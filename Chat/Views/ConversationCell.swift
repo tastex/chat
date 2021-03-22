@@ -8,7 +8,7 @@
 import UIKit
 
 class ConversationCell: UITableViewCell {
-
+    
     struct Model {
         let name: String?
         let message: String?
@@ -16,18 +16,18 @@ class ConversationCell: UITableViewCell {
         let online: Bool
         let hasUndeadMessages: Bool
     }
-
+    
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
-
+    
     func configure(with model: Model) {
-
+        
         contentView.backgroundColor = UIColor.conversationsCellBackground(online: model.online)
-
+        
         nameLabel.text = model.name ?? "Unknown contact"
         dateLabel.text = DateFormatter.stringDescribing(date: model.date)
-
+        
         var messageLabelFont: UIFont = UIFont.systemFont(ofSize: 13)
         if let message = model.message {
             messageLabel.text = message
