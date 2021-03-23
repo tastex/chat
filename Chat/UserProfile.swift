@@ -36,18 +36,12 @@ class UserProfile: UserProfileProtocol {
     var nameInitialsBackgroundColor: UIColor {
         UIColor(red: 0.894, green: 0.908, blue: 0.17, alpha: 1)
     }
-    
-    var conversations: [Conversation]
-    
-    var onlineConversations: [Conversation] { conversations.filter { $0.online } }
-    var offlineConversations: [Conversation] { conversations.filter { !$0.online } }
 
-    init(id: String, name: String? = nil, bio: String? = nil, image: UIImage? = nil, conversations: [Conversation] = []) {
+    init(id: String, name: String? = nil, bio: String? = nil, image: UIImage? = nil) {
         self.id = id
         self.name = name
         self.bio = bio
         self.image = image
-        self.conversations = conversations
     }
     
     static var defaultProfile: UserProfile {
@@ -60,42 +54,6 @@ class UserProfile: UserProfileProtocol {
             let userId = UUID().uuidString
             UserDefaults().set(userId, forKey: idKey)
             return UserProfile(id: userId, name: name, bio: bio)
-        }
-    }
-    
-    class Conversation {
-        var name: String?
-        var online: Bool
-        var messages: [Message]
-        var hasUnreadMessages: Bool { messages.contains { $0.status == .unread } }
-        
-        init(name: String?, online: Bool, messages: [Message] = []) {
-            self.name = name
-            self.online = online
-            self.messages = messages
-        }
-    }
-    
-    class Message {
-        let text: String?
-        let kind: MessageKind
-        let status: MessageStatus
-        let date: Date?
-        
-        init(_ text: String?, kind: MessageKind = .incoming, status: MessageStatus = .unread, date: Date?) {
-            self.text = text
-            self.kind = kind
-            self.status = status
-            self.date = date
-        }
-        enum MessageKind {
-            case incoming
-            case outgoing
-        }
-        
-        enum MessageStatus {
-            case unread
-            case read
         }
     }
 }
