@@ -46,14 +46,11 @@ class UserProfile: UserProfileProtocol {
     
     static var defaultProfile: UserProfile {
         let name = "Vladimir Bolotov"
-        let bio = "Tinkoff fintech student"
-        let idKey = "UserID"
-        if let userId = UserDefaults().string(forKey: idKey) {
-            return UserProfile(id: userId, name: name, bio: bio)
-        } else {
-            let userId = UUID().uuidString
-            UserDefaults().set(userId, forKey: idKey)
-            return UserProfile(id: userId, name: name, bio: bio)
+        let bio = "Tinkoff iOS Fintech Student, Vladimir"
+        guard let deviceUUID = UIDevice.current.identifierForVendor?.uuidString else {
+            fatalError("Can't get device UUID")
         }
+        return UserProfile(id: deviceUUID, name: name, bio: bio)
+
     }
 }

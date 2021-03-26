@@ -269,7 +269,6 @@ extension ProfileViewController: UITextViewDelegate {
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         activeTextView = textView
         lastOffset = self.scrollView.contentOffset
-        print("last offset = \(String(describing: lastOffset))")
         return true
     }
     
