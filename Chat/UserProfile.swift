@@ -37,20 +37,16 @@ class UserProfile: UserProfileProtocol {
         UIColor(red: 0.894, green: 0.908, blue: 0.17, alpha: 1)
     }
 
-    init(id: String, name: String? = nil, bio: String? = nil, image: UIImage? = nil) {
-        self.id = id
+    init(name: String? = nil, bio: String? = nil, image: UIImage? = nil) {
+        guard let deviceUUID = UIDevice.current.identifierForVendor?.uuidString else {
+            fatalError("Can't get device UUID")
+        }
+        self.id = deviceUUID
         self.name = name
         self.bio = bio
         self.image = image
     }
     
-    static var defaultProfile: UserProfile {
-        let name = "Vladimir Bolotov"
-        let bio = "Tinkoff iOS Fintech Student, Vladimir"
-        guard let deviceUUID = UIDevice.current.identifierForVendor?.uuidString else {
-            fatalError("Can't get device UUID")
-        }
-        return UserProfile(id: deviceUUID, name: name, bio: bio)
+    static var defaultProfile = UserProfile(name: "Vladimir Bolotov", bio: "Tinkoff iOS Fintech Student, Vladimir")
 
-    }
 }
