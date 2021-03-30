@@ -13,6 +13,30 @@ struct Message {
     let created: Date
     let senderId: String
     let senderName: String
+
+    init(content: String, created: Date, senderId: String, senderName: String) {
+        self.content = content
+        self.created = created
+        self.senderId = senderId
+        self.senderName = senderName
+    }
+}
+
+extension Message {
+    init?(with documentSnapshot: QueryDocumentSnapshot) {
+        let data = documentSnapshot.data()
+        if let content = data["content"] as? String,
+           let created = data["created"] as? Timestamp,
+           let senderId = data["senderId"] as? String,
+           let senderName = data["senderName"] as? String {
+            self.content = content
+            self.created = created.dateValue()
+            self.senderId = senderId
+            self.senderName = senderName
+        } else {
+            return nil
+        }
+    }
 }
 
 class ConversationViewController: UIViewController {
@@ -87,15 +111,7 @@ class ConversationViewController: UIViewController {
             guard let documents = snapshot?.documents else { return }
 
             self?.messages = documents.compactMap { documentSnapshot -> Message? in
-                let data = documentSnapshot.data()
-                if let content = data["content"] as? String,
-                   let created = data["created"] as? Timestamp,
-                   let senderId = data["senderId"] as? String,
-                   let senderName = data["senderName"] as? String {
-
-                    return Message(content: content, created: created.dateValue(), senderId: senderId, senderName: senderName)
-                }
-                return nil
+                return Message(with: documentSnapshot)
             }
             .sorted { $0.created < $1.created }
 

@@ -13,6 +13,7 @@ import Firebase
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var coreDataStack = CoreDataStack()
 
     var state = "not running"
 
@@ -24,9 +25,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
-        FirebaseApp.configure()
+        coreDataStack.didUpdateDataBase = { stack in
+            stack.printDatabaseStatistice()
+        }
+        coreDataStack.enableObservers()
 
-        let conversationsListVC = ConversationsListViewController(style: .grouped)
+        FirebaseApp.configure()
+        let conversationsListVC = ConversationsListViewController(style: .grouped, coreDataStack: coreDataStack)
         let navigationVC = UINavigationController(rootViewController: conversationsListVC)
         navigationVC.navigationBar.prefersLargeTitles = true
 

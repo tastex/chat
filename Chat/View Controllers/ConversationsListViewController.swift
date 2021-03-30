@@ -7,29 +7,76 @@
 
 import UIKit
 import Firebase
+import CoreData
 
 struct Channel {
     let identifier: String
     let name: String
     let lastMessage: String?
     let lastActivity: Date?
+
+    init(identifier: String, name: String, lastMessage: String?, lastActivity: Date?) {
+        self.identifier = identifier
+        self.name = name
+        self.lastMessage = lastMessage
+        self.lastActivity = lastActivity
+    }
+}
+
+extension Channel {
+    init(with documentSnapshot: QueryDocumentSnapshot) {
+        let data = documentSnapshot.data()
+        let name = data["name"] as? String ?? ""
+        let lastMessage = data["lastMessage"] as? String
+        let lastActivity = data["lastActivity"] as? Timestamp
+
+        self.identifier = documentSnapshot.documentID
+        self.name = name
+        self.lastMessage = lastMessage
+        self.lastActivity = lastActivity?.dateValue()
+    }
 }
 
 class ConversationsListViewController: UITableViewController {
-    
+
+    let coreDataStack: CoreDataStack
     let themeController = ThemeController()
     
     private let cellIdentifier = String(describing: ConversationCell.self)
 
+    private enum Keys: String {
+        case channelsPath = "channels"
+        case messagesPath = "messages"
+    }
+
     lazy var db = Firestore.firestore()
-    lazy var reference = db.collection("channels")
+    lazy var reference = db.collection(Keys.channelsPath.rawValue)
     private var listener: ListenerRegistration?
 
+    private lazy var store = FirestoreStack(with: Keys.channelsPath.rawValue)
     private var channels = [Channel]()
 
-    override init(style: UITableView.Style) {
+    func performCoreDataSave() {
+        channels.forEach { channel in
+            let messagesReference = reference.document(channel.identifier).collection(Keys.messagesPath.rawValue)
+            messagesReference.getDocuments { (snapshot, _) in
+                guard let documents = snapshot?.documents else { return }
+                self.coreDataStack.performSave { context in
+                    let channelDb = ChannelDb(channel: channel, in: context)
+                    documents.forEach {
+                        guard let message = Message(with: $0) else { return }
+                        let messageDb = MessageDb(message: message, in: context)
+                        channelDb.addToMessages(messageDb)
+                    }
+                }
+            }
+        }
+    }
+
+    init(style: UITableView.Style, coreDataStack: CoreDataStack) {
+        self.coreDataStack = coreDataStack
         super.init(style: style)
-        
+
         title = "Channels"
         tableView.register(UINib(nibName: String(describing: ConversationCell.self), bundle: nil), forCellReuseIdentifier: cellIdentifier)
         tableView.dataSource = self
@@ -40,10 +87,22 @@ class ConversationsListViewController: UITableViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    var listenerCompletion: ([Channel]) -> Void {
+        return { [weak self] channels in
+            guard let self = self else { return }
+
+            self.channels = channels
+            self.performCoreDataSave()
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        listenForNewContent()
+        store.listenForNewContent(closure: listenerCompletion)
 
         let profileView = ProfileLogoView(frame: CGRect(origin: .zero, size: CGSize(width: 40, height: 40)))
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(profileButtonTap(_:)))
@@ -64,7 +123,7 @@ class ConversationsListViewController: UITableViewController {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        listener?.remove()
+        store.listener?.remove()
     }
     
     @objc
@@ -99,29 +158,6 @@ class ConversationsListViewController: UITableViewController {
                 .instantiateViewController(withIdentifier: String(describing: ThemesViewController.self)) as? ThemesViewController else { return }
         themesVC.themePickerDelegate = themeController
         self.navigationController?.pushViewController(themesVC, animated: true)
-    }
-
-    func listenForNewContent() {
-        listener = reference.addSnapshotListener { [weak self] snapshot, _ in
-            guard let documents = snapshot?.documents else { return }
-
-            self?.channels = documents.map { documentSnapshot -> Channel in
-                let data = documentSnapshot.data()
-                let name = data["name"] as? String ?? ""
-                let lastMessage = data["lastMessage"] as? String
-                let lastActivity = data["lastActivity"] as? Timestamp
-
-                return Channel(identifier: documentSnapshot.documentID, name: name, lastMessage: lastMessage, lastActivity: lastActivity?.dateValue())
-            }.sorted { first, second in
-                guard let first = first.lastActivity else { return false }
-                guard let second = second.lastActivity else { return true }
-                return first > second
-            }
-
-            DispatchQueue.main.async {
-                self?.tableView.reloadData()
-            }
-        }
     }
 }
 
@@ -160,12 +196,13 @@ extension ConversationsListViewController {
             return
         }
         conversationVC.title = channel.name
-        let messagesCollectionReference = reference.document(channel.identifier).collection("messages")
+        let messagesCollectionReference = reference.document(channel.identifier).collection(Keys.messagesPath.rawValue)
         conversationVC.reference = messagesCollectionReference
         conversationVC.dismissHandler = { [weak self] in
-            self?.listenForNewContent()
+            guard let self = self else { return }
+            self.store.listenForNewContent(closure: self.listenerCompletion)
         }
-        listener?.remove()
+        store.listener?.remove()
         navigationController?.pushViewController(conversationVC, animated: true)
     }
 }
