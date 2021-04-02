@@ -21,17 +21,21 @@ extension ChannelDb {
         let channel =
             """
             Channel: \(identifier ?? ""), name: \(name ?? "'channel name not set'")
-            last message: \(String(describing: lastActivity)), \(lastMessage ?? "'no message yet'")\n
+            last message: \(String(describing: lastActivity)), \(lastMessage ?? "'no messages yet'")\n
             """
-        let messages = self.messages?.allObjects
-            .compactMap { $0 as? MessageDb }
-            .map { "\($0.about)" }
-            .joined(separator: "\n")
 
         var description = channel
-        if let messages = messages {
-            description += "Messages:\n" + messages
+        if let messages = self.messages {
+            let messagesDescription = messages.allObjects
+                .compactMap { $0 as? MessageDb }
+                .map { "\($0.about)" }
+                .joined(separator: "\n")
+
+            if !messagesDescription.isEmpty {
+                description += "\(messages.count) Messages:\n" + messagesDescription + "\n"
+            }
         }
+
         return description
     }
 }
@@ -39,6 +43,7 @@ extension ChannelDb {
 extension MessageDb {
     convenience init(message: Message, in context: NSManagedObjectContext) {
         self.init(context: context)
+        self.identifier = message.identifier
         self.content = message.content
         self.created = message.created
         self.senderId = message.senderId
@@ -48,10 +53,9 @@ extension MessageDb {
     var about: String {
         return
             """
-                ---
                 \(String(describing: created)), Sender: \(senderName ?? "'unknown sender name'"), id: \(senderId ?? "'sender id not set'")
                 \"\(content ?? "'empty message'")\"
-                ---\n
+                ---
             """
     }
 }

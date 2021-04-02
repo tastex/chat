@@ -10,27 +10,107 @@ import Firebase
 
 class FirestoreStack {
 
-    private let collectionPath: String
+    var collection: DocumentCollection
     private lazy var db = Firestore.firestore()
-    private lazy var reference = db.collection(collectionPath)
+    private(set) lazy var reference = collection.getCollectionReference(db: db)
+
     var listener: ListenerRegistration?
 
-    init(with collectionPath: String) {
-        self.collectionPath = collectionPath
+    init(collection: DocumentCollection) {
+        self.collection = collection
     }
 
-    func listenForNewContent(closure: @escaping ([Channel]) -> Void) {
+    enum DocumentCollection {
+        case channels
+        case messages(channelId: String)
+
+        func getCollectionReference(db: Firestore) -> CollectionReference {
+            switch self {
+            case .channels:
+                return db.collection("channels")
+            case .messages(let channelId):
+                return db.collection("channels").document(channelId).collection("messages")
+            }
+        }
+    }
+
+    func listenForNewContent<Item: FirestoreItem>(closure: @escaping ([Item]) -> Void) {
         listener = reference.addSnapshotListener { snapshot, _ in
             guard let documents = snapshot?.documents else { return }
 
-            let channels = documents.map { documentSnapshot -> Channel in
-                return Channel(with: documentSnapshot)
-            }.sorted { first, second in
-                guard let first = first.lastActivity else { return false }
-                guard let second = second.lastActivity else { return true }
-                return first > second
+            let items = documents.compactMap { documentSnapshot -> Item? in
+                return Item(with: documentSnapshot)
             }
-            closure(channels)
+            closure(items)
+        }
+    }
+
+    func stopListening() {
+        listener?.remove()
+    }
+}
+
+extension FirestoreStack {
+    func addChannel(name: String) -> DocumentReference? {
+        switch collection {
+        case .channels:
+            return reference.addDocument(data: ["name": name])
+        default:
+            return nil
+        }
+    }
+}
+
+extension FirestoreStack {
+    func addMessage(_ message: String, senderName: String, senderId: String, created: Date? = nil) {
+        switch collection {
+        case .messages:
+            reference.addDocument(data: ["content": message,
+                                         "created": Timestamp(date: created ?? Date()),
+                                         "senderId": senderId,
+                                         "senderName": senderName])
+        default:
+            return
+        }
+    }
+}
+
+protocol FirestoreItem {
+    init?(with documentSnapshot: QueryDocumentSnapshot)
+}
+
+extension Channel: FirestoreItem {
+    init?(with documentSnapshot: QueryDocumentSnapshot) {
+        let data = documentSnapshot.data()
+        if let name = data["name"] as? String {
+
+        let lastMessage = data["lastMessage"] as? String
+        let lastActivity = data["lastActivity"] as? Timestamp
+
+        self.identifier = documentSnapshot.documentID
+        self.name = name
+        self.lastMessage = lastMessage
+        self.lastActivity = lastActivity?.dateValue()
+        } else {
+            return nil
+        }
+    }
+}
+
+extension Message: FirestoreItem {
+    init?(with documentSnapshot: QueryDocumentSnapshot) {
+        let data = documentSnapshot.data()
+        if let content = data["content"] as? String,
+           let created = data["created"] as? Timestamp,
+           let senderId = data["senderId"] as? String,
+           let senderName = data["senderName"] as? String {
+            self.identifier = documentSnapshot.documentID
+            self.content = content
+            self.created = created.dateValue()
+            self.senderId = senderId
+            self.senderName = senderName
+        } else {
+            return nil
         }
     }
 }

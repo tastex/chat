@@ -23,20 +23,6 @@ struct Channel {
     }
 }
 
-extension Channel {
-    init(with documentSnapshot: QueryDocumentSnapshot) {
-        let data = documentSnapshot.data()
-        let name = data["name"] as? String ?? ""
-        let lastMessage = data["lastMessage"] as? String
-        let lastActivity = data["lastActivity"] as? Timestamp
-
-        self.identifier = documentSnapshot.documentID
-        self.name = name
-        self.lastMessage = lastMessage
-        self.lastActivity = lastActivity?.dateValue()
-    }
-}
-
 class ConversationsListViewController: UITableViewController {
 
     let coreDataStack: CoreDataStack
@@ -44,34 +30,8 @@ class ConversationsListViewController: UITableViewController {
     
     private let cellIdentifier = String(describing: ConversationCell.self)
 
-    private enum Keys: String {
-        case channelsPath = "channels"
-        case messagesPath = "messages"
-    }
-
-    lazy var db = Firestore.firestore()
-    lazy var reference = db.collection(Keys.channelsPath.rawValue)
-    private var listener: ListenerRegistration?
-
-    private lazy var store = FirestoreStack(with: Keys.channelsPath.rawValue)
+    private lazy var store = FirestoreStack(collection: .channels)
     private var channels = [Channel]()
-
-    func performCoreDataSave() {
-        channels.forEach { channel in
-            let messagesReference = reference.document(channel.identifier).collection(Keys.messagesPath.rawValue)
-            messagesReference.getDocuments { (snapshot, _) in
-                guard let documents = snapshot?.documents else { return }
-                self.coreDataStack.performSave { context in
-                    let channelDb = ChannelDb(channel: channel, in: context)
-                    documents.forEach {
-                        guard let message = Message(with: $0) else { return }
-                        let messageDb = MessageDb(message: message, in: context)
-                        channelDb.addToMessages(messageDb)
-                    }
-                }
-            }
-        }
-    }
 
     init(style: UITableView.Style, coreDataStack: CoreDataStack) {
         self.coreDataStack = coreDataStack
@@ -88,13 +48,19 @@ class ConversationsListViewController: UITableViewController {
     }
 
     var listenerCompletion: ([Channel]) -> Void {
-        return { [weak self] channels in
-            guard let self = self else { return }
+        return { channels in
+            let queue = DispatchQueue(label: "UpdatingChannelsContentQueue", qos: .userInitiated)
+            queue.async {
+                self.channels = channels.sorted { first, second in
+                    guard let first = first.lastActivity else { return false }
+                    guard let second = second.lastActivity else { return true }
+                    return first > second
+                }
 
-            self.channels = channels
-            self.performCoreDataSave()
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+                self.performCoreDataSave()
             }
         }
     }
@@ -123,7 +89,7 @@ class ConversationsListViewController: UITableViewController {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        store.listener?.remove()
+        store.stopListening()
     }
     
     @objc
@@ -133,8 +99,8 @@ class ConversationsListViewController: UITableViewController {
         alert.addAction(.init(title: "Cancel", style: .cancel))
         alert.addAction(.init(title: "Create", style: .default, handler: { (_) in
             if let name = alert.textFields?.first?.text,
-               !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                let document = self.reference.addDocument(data: ["name": name])
+               !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+               let document = self.store.addChannel(name: name) {
                 self.presentMessages(in: Channel(identifier: document.documentID, name: name, lastMessage: nil, lastActivity: nil))
             }
         }))
@@ -158,6 +124,16 @@ class ConversationsListViewController: UITableViewController {
                 .instantiateViewController(withIdentifier: String(describing: ThemesViewController.self)) as? ThemesViewController else { return }
         themesVC.themePickerDelegate = themeController
         self.navigationController?.pushViewController(themesVC, animated: true)
+    }
+}
+
+extension ConversationsListViewController {
+    func performCoreDataSave() {
+        self.coreDataStack.performSave { context in
+            channels.forEach {
+                _ = ChannelDb(channel: $0, in: context)
+            }
+        }
     }
 }
 
@@ -195,14 +171,15 @@ extension ConversationsListViewController {
                 as? ConversationViewController else {
             return
         }
-        conversationVC.title = channel.name
-        let messagesCollectionReference = reference.document(channel.identifier).collection(Keys.messagesPath.rawValue)
-        conversationVC.reference = messagesCollectionReference
+        store.stopListening()
+
+        conversationVC.channel = channel
+        conversationVC.store = FirestoreStack(collection: .messages(channelId: channel.identifier))
+        conversationVC.coreDataStack = coreDataStack
         conversationVC.dismissHandler = { [weak self] in
             guard let self = self else { return }
             self.store.listenForNewContent(closure: self.listenerCompletion)
         }
-        store.listener?.remove()
         navigationController?.pushViewController(conversationVC, animated: true)
     }
 }

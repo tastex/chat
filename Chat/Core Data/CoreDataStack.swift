@@ -58,10 +58,7 @@ class CoreDataStack {
         context.mergePolicy = NSMergeByPropertyStoreTrumpMergePolicy
         return context
     }()
-}
 
-// MARK: - SaveContext
-extension CoreDataStack {
     private func saveContext() -> NSManagedObjectContext {
         let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         context.parent = mainContext
@@ -69,7 +66,10 @@ extension CoreDataStack {
         context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         return context
     }
+}
 
+// MARK: - Saving Contexts
+extension CoreDataStack {
     func performSave(_ block: (NSManagedObjectContext) -> Void) {
         let context = saveContext()
         context.performAndWait {
@@ -88,12 +88,11 @@ extension CoreDataStack {
                 assertionFailure(error.localizedDescription)
             }
         }
-        if let parent = context.parent { performSave(in: parent)}
+        if let parent = context.parent { performSave(in: parent) }
     }
 }
 
 // MARK: - CoreData Observers
-
 extension CoreDataStack {
     func enableObservers() {
         let notificationCenter = NotificationCenter.default
@@ -132,13 +131,13 @@ extension CoreDataStack {
         mainContext.perform {
             do {
                 let count = try self.mainContext.count(for: ChannelDb.fetchRequest())
-                print("    Сохранено \(count) каналов")
+                print("Всего сохранено \(count) каналов")
                 let messagesCount = try self.mainContext.count(for: MessageDb.fetchRequest())
-                print("    Сохранено \(messagesCount) cooбщений")
-//                let array = try self.mainContext.fetch(ChannelDb.fetchRequest()) as? [ChannelDb] ?? []
-//                array.forEach {
-//                    print($0.about)
-//                }
+                print("Всего сохранено \(messagesCount) cooбщений")
+                let array = try self.mainContext.fetch(ChannelDb.fetchRequest()) as? [ChannelDb] ?? []
+                array.forEach {
+                    print($0.about)
+                }
             } catch {
                 fatalError(error.localizedDescription)
             }

@@ -25,10 +25,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
-        coreDataStack.didUpdateDataBase = { stack in
-            stack.printDatabaseStatistice()
+        coreDataStack.printDatabaseStatistice()
+
+        let enableCoreDataObservers = false // Не включаю обсерверы, чтобы не было мусорить в консоль
+        if enableCoreDataObservers {
+            coreDataStack.didUpdateDataBase = { stack in
+                stack.printDatabaseStatistice()
+            }
+            coreDataStack.enableObservers()
         }
-        coreDataStack.enableObservers()
 
         FirebaseApp.configure()
         let conversationsListVC = ConversationsListViewController(style: .grouped, coreDataStack: coreDataStack)
