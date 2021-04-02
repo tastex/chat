@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         coreDataStack.printDatabaseStatistice()
 
-        let enableCoreDataObservers = false // Не включаю обсерверы, чтобы не было мусорить в консоль
+        let enableCoreDataObservers = false // Не включаю обсерверы, чтобы не мусорить в консоль
         if enableCoreDataObservers {
             coreDataStack.didUpdateDataBase = { stack in
                 stack.printDatabaseStatistice()
