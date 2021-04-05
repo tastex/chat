@@ -9,6 +9,8 @@ import UIKit
 
 class ConversationsListViewController: UITableViewController {
 
+    let themeController = ThemeController()
+
     private let cellIdentifier = String(describing: ConversationCell.self)
 
     override init(style: UITableView.Style) {
@@ -36,6 +38,7 @@ class ConversationsListViewController: UITableViewController {
         profileView.addGestureRecognizer(tapGestureRecognizer)
 
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: profileView)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "SettingsIcon"), style: .plain, target: self, action: #selector(settingsButtonTap))
     }
 
     @objc
@@ -46,6 +49,18 @@ class ConversationsListViewController: UITableViewController {
         let navigationVC = UINavigationController(rootViewController: profileVC)
         navigationVC.navigationBar.prefersLargeTitles = true
         self.navigationController?.present(navigationVC, animated: true, completion: nil)
+    }
+
+    @objc
+    func settingsButtonTap() {
+        guard let themesVC = UIStoryboard(name: "Main", bundle: .main)
+                .instantiateViewController(withIdentifier: String(describing: ThemesViewController.self)) as? ThemesViewController else { return }
+        //themesVC.themePickerDelegate = themeController
+        themesVC.themeChangeHandler = { [self] (theme, viewController) in
+            themeController.didSelectTheme(theme)
+            themeController.updateAppearance(viewController: viewController)
+        }
+        self.navigationController?.pushViewController(themesVC, animated: true)
     }
 
     // MARK: - Table view data source

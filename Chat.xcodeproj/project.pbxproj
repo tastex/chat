@@ -15,6 +15,10 @@
 		BC3DF47925DDADD3004A8F91 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC3DF47725DDADD3004A8F91 /* Main.storyboard */; };
 		BC3DF47B25DDADD4004A8F91 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BC3DF47A25DDADD4004A8F91 /* Assets.xcassets */; };
 		BC3DF47E25DDADD4004A8F91 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC3DF47C25DDADD4004A8F91 /* LaunchScreen.storyboard */; };
+		BC6B424F25F96D1A0007EC34 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6B424E25F96D1A0007EC34 /* Theme.swift */; };
+		BC77955025F80D0300914386 /* ThemesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC77954F25F80D0300914386 /* ThemesViewController.swift */; };
+		BC77955725F82AC200914386 /* ThemeAppearanceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BC77955625F82AC200914386 /* ThemeAppearanceView.xib */; };
+		BC77955A25F8364D00914386 /* ThemeAppearanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC77955925F8364D00914386 /* ThemeAppearanceView.swift */; };
 		BCC0974325EEC0DC00C63BF7 /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCC0974225EEC0DC00C63BF7 /* ConversationViewController.swift */; };
 		BCC0976C25F007AC00C63BF7 /* ConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCC0976A25F007AC00C63BF7 /* ConversationCell.swift */; };
 		BCC0976D25F007AC00C63BF7 /* ConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCC0976B25F007AC00C63BF7 /* ConversationCell.xib */; };
@@ -33,6 +37,10 @@
 		BC3DF47A25DDADD4004A8F91 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BC3DF47D25DDADD4004A8F91 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BC3DF47F25DDADD4004A8F91 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BC6B424E25F96D1A0007EC34 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		BC77954F25F80D0300914386 /* ThemesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemesViewController.swift; sourceTree = "<group>"; };
+		BC77955625F82AC200914386 /* ThemeAppearanceView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThemeAppearanceView.xib; sourceTree = "<group>"; };
+		BC77955925F8364D00914386 /* ThemeAppearanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeAppearanceView.swift; sourceTree = "<group>"; };
 		BCC0974225EEC0DC00C63BF7 /* ConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewController.swift; sourceTree = "<group>"; };
 		BCC0976A25F007AC00C63BF7 /* ConversationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCell.swift; sourceTree = "<group>"; };
 		BCC0976B25F007AC00C63BF7 /* ConversationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationCell.xib; sourceTree = "<group>"; };
@@ -51,6 +59,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BC0EDC6D25F952F3001EBB17 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				BCC0976A25F007AC00C63BF7 /* ConversationCell.swift */,
+				BCC0976B25F007AC00C63BF7 /* ConversationCell.xib */,
+				BC285E0525F02A84008AFE06 /* MessageCell.swift */,
+				BC285E0625F02A84008AFE06 /* MessageCellIncoming.xib */,
+				BC285E0A25F03873008AFE06 /* MessageCellOutgoing.xib */,
+				BC77955925F8364D00914386 /* ThemeAppearanceView.swift */,
+				BC77955625F82AC200914386 /* ThemeAppearanceView.xib */,
+				BC3DF47725DDADD3004A8F91 /* Main.storyboard */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		BC0EDC6E25F9533F001EBB17 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				BCF7003625EB9BF900707D65 /* ConversationsListViewController.swift */,
+				BCC0974225EEC0DC00C63BF7 /* ConversationViewController.swift */,
+				BC3DF47525DDADD3004A8F91 /* ProfileViewController.swift */,
+				BC77954F25F80D0300914386 /* ThemesViewController.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
 		BC3DF46525DDADD3004A8F91 = {
 			isa = PBXGroup;
 			children = (
@@ -70,17 +104,11 @@
 		BC3DF47025DDADD3004A8F91 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
+				BC0EDC6E25F9533F001EBB17 /* View Controllers */,
+				BC0EDC6D25F952F3001EBB17 /* Views */,
 				BC3DF47125DDADD3004A8F91 /* AppDelegate.swift */,
 				BCF7003925EBEFDE00707D65 /* UserProfile.swift */,
-				BCF7003625EB9BF900707D65 /* ConversationsListViewController.swift */,
-				BCC0976A25F007AC00C63BF7 /* ConversationCell.swift */,
-				BCC0976B25F007AC00C63BF7 /* ConversationCell.xib */,
-				BCC0974225EEC0DC00C63BF7 /* ConversationViewController.swift */,
-				BC285E0525F02A84008AFE06 /* MessageCell.swift */,
-				BC285E0625F02A84008AFE06 /* MessageCellIncoming.xib */,
-				BC285E0A25F03873008AFE06 /* MessageCellOutgoing.xib */,
-				BC3DF47525DDADD3004A8F91 /* ProfileViewController.swift */,
-				BC3DF47725DDADD3004A8F91 /* Main.storyboard */,
+				BC6B424E25F96D1A0007EC34 /* Theme.swift */,
 				BC3DF47A25DDADD4004A8F91 /* Assets.xcassets */,
 				BC3DF47C25DDADD4004A8F91 /* LaunchScreen.storyboard */,
 				BC3DF47F25DDADD4004A8F91 /* Info.plist */,
@@ -147,6 +175,7 @@
 			files = (
 				BC285E0825F02A84008AFE06 /* MessageCellIncoming.xib in Resources */,
 				BCC0976D25F007AC00C63BF7 /* ConversationCell.xib in Resources */,
+				BC77955725F82AC200914386 /* ThemeAppearanceView.xib in Resources */,
 				BC3DF47E25DDADD4004A8F91 /* LaunchScreen.storyboard in Resources */,
 				BC285E0B25F03873008AFE06 /* MessageCellOutgoing.xib in Resources */,
 				BC3DF47B25DDADD4004A8F91 /* Assets.xcassets in Resources */,
@@ -163,9 +192,12 @@
 			files = (
 				BCF7003A25EBEFDE00707D65 /* UserProfile.swift in Sources */,
 				BC3DF47625DDADD3004A8F91 /* ProfileViewController.swift in Sources */,
+				BC77955025F80D0300914386 /* ThemesViewController.swift in Sources */,
+				BC77955A25F8364D00914386 /* ThemeAppearanceView.swift in Sources */,
 				BCC0976C25F007AC00C63BF7 /* ConversationCell.swift in Sources */,
 				BCC0974325EEC0DC00C63BF7 /* ConversationViewController.swift in Sources */,
 				BC3DF47225DDADD3004A8F91 /* AppDelegate.swift in Sources */,
+				BC6B424F25F96D1A0007EC34 /* Theme.swift in Sources */,
 				BCF7003725EB9BF900707D65 /* ConversationsListViewController.swift in Sources */,
 				BC285E0725F02A84008AFE06 /* MessageCell.swift in Sources */,
 			);

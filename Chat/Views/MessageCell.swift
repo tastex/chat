@@ -13,7 +13,7 @@ class MessageCell: UITableViewCell {
         let text: String?
     }
 
-    @IBOutlet weak var bobbleView: UIView?
+    @IBOutlet weak var bubbleView: UIView?
     @IBOutlet weak var messageLabel: UILabel?
 
     func configure(with model: Model) {
@@ -24,9 +24,9 @@ class MessageCell: UITableViewCell {
             messageLabel?.text = ""
         }
 
-        bobbleView?.layer.cornerRadius = 14
+        bubbleView?.layer.cornerRadius = 14
         if #available(iOS 13.0, *) {
-            bobbleView?.layer.cornerCurve = .continuous
+            bubbleView?.layer.cornerCurve = .continuous
         }
     }
 
