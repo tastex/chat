@@ -13,14 +13,17 @@ class ThemesViewController: UIViewController {
     @IBOutlet weak var middleThemeContainer: UIView!
     @IBOutlet weak var bottomThemeContainer: UIView!
 
-    var themeViews = Array<SelectableView>()
+    var themeViews = [SelectableView]()
     weak var themePickerDelegate: ThemesPickerDelegate?
     var themeChangeHandler: ((_ theme: Theme, _ viewController: UIViewController) -> Void)?
 
     required init?(coder: NSCoder) {
         super .init(coder: coder)
         title = "Settings"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelButtonTap(_:)))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Cancel",
+                                                            style: .plain,
+                                                            target: self,
+                                                            action: #selector(cancelButtonTap(_:)))
         navigationItem.largeTitleDisplayMode = .never
     }
 
@@ -32,7 +35,7 @@ class ThemesViewController: UIViewController {
     @objc
     func selectThemeAppearanceView(_ sender: UITapGestureRecognizer) {
         if let selectableView = sender.view as? SelectableView,
-           let theme = Theme.init(rawValue: selectableView.tag) {
+           let theme = Theme(rawValue: selectableView.tag) {
             selectTheme(theme)
         }
     }
@@ -57,17 +60,20 @@ class ThemesViewController: UIViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        super .viewWillAppear(animated)
+        super.viewWillAppear(animated)
 
         if themeViews.isEmpty {
             let containerViews = [topThemeContainer, middleThemeContainer, bottomThemeContainer]
             for theme in Theme.allCases {
-                guard let themeView = UINib(nibName: String(describing: ThemeAppearanceView.self), bundle: nil).instantiate(withOwner: nil, options: nil)[0] as? ThemeAppearanceView else { continue }
+                guard let themeView = UINib(nibName: String(describing: ThemeAppearanceView.self), bundle: nil)
+                        .instantiate(withOwner: nil, options: nil)[0] as? ThemeAppearanceView else { continue }
                 guard let container = containerViews[theme.rawValue] else { continue }
 
                 themeView.configure(theme: theme, frame: CGRect(origin: .zero, size: container.frame.size))
 
-                let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(selectThemeAppearanceView(_:)))
+                let tapRecognizer = UITapGestureRecognizer(
+                    target: self,
+                    action: #selector(selectThemeAppearanceView(_:)))
                 themeView.addGestureRecognizer(tapRecognizer)
                 themeView.tag = theme.rawValue
 

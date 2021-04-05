@@ -6,111 +6,253 @@
 //
 
 import UIKit
+import Firebase
 
-class ConversationViewController: UITableViewController {
+struct Message {
+    let content: String
+    let created: Date
+    let senderId: String
+    let senderName: String
+}
 
-    private let messages: Array<UserProfile.Message>?
+class ConversationViewController: UIViewController {
+
+    var reference: CollectionReference?
+    var dismissHandler: (() -> Void)?
+
+    private var listener: ListenerRegistration?
+
+    private var messages = [Message]()
     private let cellIdentifierIncoming = "MessageCellIncoming"
     private let cellIdentifierOutgoing = "MessageCellOutgoing"
 
-    init(title: String, messages: [UserProfile.Message]) {
-        self.messages = messages
-
-        super.init(style: .plain)
-
-        self.title = title
-        tableView.register(UINib(nibName: cellIdentifierIncoming, bundle: nil), forCellReuseIdentifier: cellIdentifierIncoming)
-        tableView.register(UINib(nibName: cellIdentifierOutgoing, bundle: nil), forCellReuseIdentifier: cellIdentifierOutgoing)
-        tableView.dataSource = self
-        tableView.delegate = self
-
-        self.tableView.separatorStyle = .none
-        self.tableView.allowsSelection = false
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var sendButton: UIButton!
+    @IBOutlet weak var messageInputView: UITextView!
+    @IBOutlet weak var messageInputBackgroundView: UIView!
+    @IBOutlet weak var messageInputContainer: UIView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationItem.largeTitleDisplayMode = .never
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
+        tableView.allowsSelection = false
+        tableView.register(UINib(nibName: cellIdentifierIncoming, bundle: nil), forCellReuseIdentifier: cellIdentifierIncoming)
+        tableView.register(UINib(nibName: cellIdentifierOutgoing, bundle: nil), forCellReuseIdentifier: cellIdentifierOutgoing)
 
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        tableView.dataSource = self
+
+        listenForNewContent()
+
+        messageInputView.text = ""
+        messageInputView.delegate = self
+        messageInputViewShowPlaceholder()
+
+        startAvoidingKeyboard()
+        tableView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(hideKeyboard(_:))))
+
+        sendButton.layer.cornerRadius = sendButton.frame.height / 2
+        messageInputBackgroundView.layer.cornerRadius = messageInputBackgroundView.frame.height / 2
+        if #available(iOS 13.0, *) {
+            messageInputBackgroundView.layer.cornerCurve = .continuous
+        }
     }
 
-    // MARK: - Table view data source
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        stopAvoidingKeyboard()
+        listener?.remove()
+        dismissHandler?()
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return messages?.count ?? 0
+    @IBAction func sendButtonTap(_ sender: Any) {
+        if let message = messageInputView.text,
+           !message.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+           !isMessageInputViewPlaceholderVisible,
+           let senderName = UserProfile.defaultProfile.name {
+            reference?.addDocument(data: ["content": message,
+                                          "created": Timestamp(date: Date()),
+                                          "senderId": UserProfile.defaultProfile.id,
+                                          "senderName": senderName])
+            messageInputView.text = ""
+        }
     }
 
+    func listenForNewContent() {
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let message = messages?[indexPath.row] else { return UITableViewCell() }
-        var cellIdentifier = cellIdentifierOutgoing
-        if message.kind == .incoming {
-            cellIdentifier = cellIdentifierIncoming
+        var scrollToBottomAnimated = false
+
+        listener = reference?.addSnapshotListener { [weak self]  snapshot, _ in
+            guard let documents = snapshot?.documents else { return }
+
+            self?.messages = documents.compactMap { documentSnapshot -> Message? in
+                let data = documentSnapshot.data()
+                if let content = data["content"] as? String,
+                   let created = data["created"] as? Timestamp,
+                   let senderId = data["senderId"] as? String,
+                   let senderName = data["senderName"] as? String {
+
+                    return Message(content: content, created: created.dateValue(), senderId: senderId, senderName: senderName)
+                }
+                return nil
+            }
+            .sorted { $0.created < $1.created }
+
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                self.tableView.reloadData()
+                self.scrollToBottom(animated: scrollToBottomAnimated)
+                scrollToBottomAnimated = true
+            }
+        }
+    }
+
+    func scrollToBottom(animated: Bool) {
+
+        let numberOfSections = tableView.numberOfSections
+        let numberOfRows = tableView.numberOfRows(inSection: numberOfSections - 1)
+        if numberOfRows > 0 {
+            tableView.scrollToRow(at: IndexPath(row: numberOfRows - 1, section: (numberOfSections - 1)), at: .bottom, animated: animated)
+        }
+    }
+}
+
+// MARK: - Table view data source
+extension ConversationViewController: UITableViewDataSource {
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return messages.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let message = messages[indexPath.row]
+        var cellIdentifier = cellIdentifierIncoming
+        if message.senderId == UserProfile.defaultProfile.id {
+            cellIdentifier = cellIdentifierOutgoing
         }
 
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? MessageCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? MessageCell else {
+            return UITableViewCell()
+        }
 
-        cell.configure(with: .init(text: message.text))
+        var senderName: String? = message.senderName
+        if message.senderId == UserProfile.defaultProfile.id {
+            senderName = nil
+        }
+
+        cell.configure(with: .init(text: message.content, senderName: senderName))
         return cell
     }
+}
 
+extension DateFormatter {
+    static func stringDescribingMessage(date: Date?) -> String {
+        guard let date = date else { return "Sometime" }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd MMM HH:mm"
+        if Calendar.current.isDateInToday(date) {
+            formatter.dateFormat = "HH:mm"
+        }
+        return formatter.string(from: date)
+    }
+}
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
+// MARK: UITextViewDelegate
+extension ConversationViewController: UITextViewDelegate {
+
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        messageInputViewHidePlaceholder()
         return true
     }
-    */
 
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        messageInputViewShowPlaceholder()
     }
-    */
 
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+}
+
+// MARK: - Handle placeholder in messageInputView
+extension ConversationViewController {
+
+    private var messageInputViewPlaceholderText: String { "Message" }
+
+    var isMessageInputViewPlaceholderVisible: Bool {
+        messageInputView.text == messageInputViewPlaceholderText && messageInputView.textColor == .lightGray
+    }
+
+    func messageInputViewShowPlaceholder() {
+        if messageInputView.text.isEmpty {
+            sendButton.isHidden = true
+            messageInputView.text = messageInputViewPlaceholderText
+            messageInputView.textColor = .lightGray
+        }
+    }
+
+    func messageInputViewHidePlaceholder() {
+        if isMessageInputViewPlaceholderVisible {
+            sendButton.isHidden = false
+            messageInputView.text = ""
+            messageInputView.textColor = .black
+            if #available(iOS 13.0, *) {
+                messageInputView.textColor = .label
+            }
+        }
+    }
+}
+
+// MARK: - Handle Keyboard
+extension ConversationViewController {
+
+    @objc func hideKeyboard(_ sender: UIGestureRecognizer?) {
+        self.messageInputView.resignFirstResponder()
+    }
+
+    func startAvoidingKeyboard() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(onKeyboardFrameWillChangeNotificationReceived),
+                                               name: UIResponder.keyboardWillChangeFrameNotification,
+                                               object: nil)
+    }
+    
+    func stopAvoidingKeyboard() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+    }
+
+    @objc
+    private func onKeyboardFrameWillChangeNotificationReceived(notification: Notification) {
+        guard
+            let userInfo = notification.userInfo,
+            let keyboardFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+        else {
+            return
+        }
+
+        let keyboardFrameInView = view.convert(keyboardFrame, from: nil)
+        guard keyboardFrameInView.origin.x == 0 else { return }
+
+        let safeAreaFrame = view.safeAreaLayoutGuide.layoutFrame.insetBy(dx: 0, dy: -additionalSafeAreaInsets.bottom)
+        let intersection = safeAreaFrame.intersection(keyboardFrameInView)
+        guard additionalSafeAreaInsets.bottom != intersection.height else { return }
+
+        let previousIntersectionHeight = additionalSafeAreaInsets.bottom
+        additionalSafeAreaInsets.bottom = intersection.height
+
+        UIView.animate(withDuration: 0.7,
+                       delay: 0,
+                       options: .curveEaseInOut,
+                       animations: {
+                        self.view.layoutIfNeeded()
+                       })
+
+        var scrollOffset = intersection.height
+        let contentOverScroll = tableView.contentSize.height - tableView.contentOffset.y - tableView.frame.height
+        if scrollOffset == 0, contentOverScroll > 0 {
+            scrollOffset = -previousIntersectionHeight
+        } else if contentOverScroll < 0 {
+            scrollOffset = contentOverScroll
+        }
+        tableView.scrollRectToVisible(CGRect(origin: CGPoint(x: 0, y: tableView.contentOffset.y + scrollOffset), size: tableView.frame.size), animated: false)
 
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
