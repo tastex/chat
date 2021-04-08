@@ -39,7 +39,7 @@ extension DateFormatter {
     static func stringDescribing(date: Date?) -> String {
         guard let date = date else { return "Sometime" }
         let formatter = DateFormatter()
-        formatter.dateFormat = "dd MMM"
+        formatter.dateFormat = "dd MMM HH:mm"
         if Calendar.current.isDateInToday(date) {
             formatter.dateFormat = "HH:mm"
         }

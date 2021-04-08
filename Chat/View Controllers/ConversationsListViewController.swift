@@ -27,11 +27,14 @@ class ConversationsListViewController: UITableViewController {
 
     let coreDataStack: CoreDataStack
     let themeController = ThemeController()
-    
-    private let cellIdentifier = String(describing: ConversationCell.self)
 
     private lazy var store = FirestoreStack(collection: .channels)
-    private var channels = [Channel]()
+    private lazy var dataController: DataController = {
+        tableView.tag = 1
+        return DataController(for: .channels, tableView: tableView, in: coreDataStack.mainContext)
+    }()
+
+    private let cellIdentifier = String(describing: ConversationCell.self)
 
     init(style: UITableView.Style, coreDataStack: CoreDataStack) {
         self.coreDataStack = coreDataStack
@@ -49,19 +52,7 @@ class ConversationsListViewController: UITableViewController {
 
     var listenerCompletion: ([Channel]) -> Void {
         return { channels in
-            let queue = DispatchQueue(label: "UpdatingChannelsContentQueue", qos: .userInitiated)
-            queue.async {
-                self.channels = channels.sorted { first, second in
-                    guard let first = first.lastActivity else { return false }
-                    guard let second = second.lastActivity else { return true }
-                    return first > second
-                }
-
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-                self.performCoreDataSave()
-            }
+            self.performCoreDataSave(channels: channels)
         }
     }
 
@@ -69,6 +60,8 @@ class ConversationsListViewController: UITableViewController {
         super.viewDidLoad()
 
         store.listenForNewContent(closure: listenerCompletion)
+
+        store.listenForContentChanges { (_: [Channel]) in  }
 
         let profileView = ProfileLogoView(frame: CGRect(origin: .zero, size: CGSize(width: 40, height: 40)))
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(profileButtonTap(_:)))
@@ -127,27 +120,27 @@ class ConversationsListViewController: UITableViewController {
     }
 }
 
-extension ConversationsListViewController {
-    func performCoreDataSave() {
+ extension ConversationsListViewController {
+    func performCoreDataSave(channels: [Channel]) {
         self.coreDataStack.performSave { context in
-            channels.forEach {
-                _ = ChannelDb(channel: $0, in: context)
-            }
+            channels.forEach { _ = ChannelDb(channel: $0, in: context) }
         }
     }
-}
+ }
 
 // MARK: - Table view data source
 extension ConversationsListViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return channels.count
+        return dataController.numberOfRowsInSection(section: section)
     }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? ConversationCell else { return UITableViewCell() }
 
-        let channel = channels[indexPath.row]
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? ConversationCell,
+              let channel = dataController.getChannel(at: indexPath)
+        else {
+            return UITableViewCell()
+        }
 
         cell.configure(with: .init(name: channel.name, message: channel.lastMessage, date: channel.lastActivity))
         return cell
@@ -157,7 +150,7 @@ extension ConversationsListViewController {
 // MARK: - Table view delegate
 extension ConversationsListViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let channel = channels[indexPath.row]
+        guard let channel = dataController.getChannel(at: indexPath) else { return }
         presentMessages(in: channel)
     }
 }
@@ -172,24 +165,54 @@ extension ConversationsListViewController {
             return
         }
         store.stopListening()
+        dataController.stopTrackChanges()
 
         conversationVC.channel = channel
-        conversationVC.store = FirestoreStack(collection: .messages(channelId: channel.identifier))
         conversationVC.coreDataStack = coreDataStack
         conversationVC.dismissHandler = { [weak self] in
             guard let self = self else { return }
             self.store.listenForNewContent(closure: self.listenerCompletion)
+            self.dataController.startTrackChanges()
         }
         navigationController?.pushViewController(conversationVC, animated: true)
     }
 }
 
-public extension UIImage {
-    func copy(newSize: CGSize) -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(newSize, false, 0)
-        self.draw(in: CGRect(origin: .zero, size: newSize))
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image
-    }
-}
+// extension ConversationsListViewController: NSFetchedResultsControllerDelegate {
+//
+//    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+//        self.tableView.beginUpdates()
+//    }
+//
+//    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+//        self.tableView.endUpdates()
+//        print("end updates from ConversationsListViewController")
+//
+//    }
+//
+//    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
+//                    didChange anObject: Any,
+//                    at indexPath: IndexPath?,
+//                    for type: NSFetchedResultsChangeType,
+//                    newIndexPath: IndexPath?) {
+//
+//        switch type {
+//        case .insert:
+//            guard let newIndexPath = newIndexPath else { return }
+//            tableView.insertRows(at: [newIndexPath], with: .automatic)
+//        case .move:
+//            guard let indexPath = indexPath,
+//                  let newIndexPath = newIndexPath else { return }
+//            tableView.deleteRows(at: [indexPath], with: .automatic)
+//            tableView.insertRows(at: [newIndexPath], with: .automatic)
+//        case .update:
+//            guard let indexPath = indexPath else { return }
+//            tableView.reloadRows(at: [indexPath], with: .automatic)
+//        case .delete:
+//            guard let indexPath = indexPath else { return }
+//            tableView.deleteRows(at: [indexPath], with: .automatic)
+//        default:
+//            return
+//        }
+//    }
+// }

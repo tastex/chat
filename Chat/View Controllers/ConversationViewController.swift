@@ -19,11 +19,21 @@ struct Message {
 class ConversationViewController: UIViewController {
 
     var channel: Channel?
-    var store: FirestoreStack?
     var coreDataStack: CoreDataStack?
+
+    lazy var store: FirestoreStack? = {
+        guard let channel = channel else { return nil }
+        return FirestoreStack(collection: .messages(channelId: channel.identifier))
+    }()
+    lazy var dataController: DataController? = {
+        guard let channel = channel,
+              let coreDataStack = coreDataStack else { return nil }
+        tableView.tag = 2
+        return DataController(for: .messages(channelId: channel.identifier), tableView: tableView, in: coreDataStack.mainContext)
+    }()
+
     var dismissHandler: (() -> Void)?
 
-    private var messages = [Message]()
     private let cellIdentifierIncoming = "MessageCellIncoming"
     private let cellIdentifierOutgoing = "MessageCellOutgoing"
 
@@ -46,20 +56,13 @@ class ConversationViewController: UIViewController {
         tableView.dataSource = self
 
         var scrollToBottomAnimated = false
+        dataController?.didChangeContentClosure = { [weak self] in
+            self?.scrollToBottom(animated: scrollToBottomAnimated)
+            scrollToBottomAnimated = true
+        }
+
         store?.listenForNewContent { (messages: [Message]) in
-            let queue = DispatchQueue(label: "UpdatingMessagesContentQueue", qos: .userInitiated)
-            queue.async {
-                self.messages = messages.sorted { $0.created < $1.created }
-
-                DispatchQueue.main.async {
-                    self.title = "\(self.channel?.name ?? "") \(messages.count)"
-                    self.tableView.reloadData()
-                    self.scrollToBottom(animated: scrollToBottomAnimated)
-                    scrollToBottomAnimated = true
-                }
-
-                self.performCoreDataSave(messages: messages)
-            }
+            self.performCoreDataSave(messages: messages)
         }
 
         messageInputView.text = ""
@@ -74,6 +77,11 @@ class ConversationViewController: UIViewController {
         if #available(iOS 13.0, *) {
             messageInputBackgroundView.layer.cornerCurve = .continuous
         }
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        scrollToBottom(animated: false)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -121,19 +129,22 @@ extension ConversationViewController {
 extension ConversationViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return messages.count
+        guard let dataController = dataController else { return 0 }
+        return dataController.numberOfRowsInSection(section: section)
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let message = messages[indexPath.row]
+
+        guard let dataController = dataController,
+              let message = dataController.getMessage(at: indexPath)
+        else { return UITableViewCell() }
+
         var cellIdentifier = cellIdentifierIncoming
         if message.senderId == UserProfile.defaultProfile.id {
             cellIdentifier = cellIdentifierOutgoing
         }
-
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? MessageCell else {
-            return UITableViewCell()
-        }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? MessageCell
+        else { return UITableViewCell() }
 
         var senderName: String? = message.senderName
         if message.senderId == UserProfile.defaultProfile.id {

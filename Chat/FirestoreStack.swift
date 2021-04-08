@@ -45,6 +45,30 @@ class FirestoreStack {
         }
     }
 
+    func listenForContentChanges<Item: FirestoreItem>(closure: @escaping ([Item]) -> Void) {
+        listener = reference.addSnapshotListener { snapshot, _ in
+            guard let documentChanges = snapshot?.documentChanges else { return }
+
+            documentChanges.forEach { (change) in
+
+                let item = Item(with: change.document)
+                switch change.type {
+                case .added:
+                    print("added item: \(String(describing: item))")
+                case .modified:
+                    print("modified item: \(String(describing: item))")
+                case .removed:
+                    print("removed item: \(String(describing: item))")
+                }
+
+            }
+//            let items = documents.compactMap { documentSnapshot -> Item? in
+//                return Item(with: documentSnapshot)
+//            }
+//            closure(items)
+        }
+    }
+
     func stopListening() {
         listener?.remove()
     }
