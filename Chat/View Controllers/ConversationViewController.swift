@@ -61,8 +61,8 @@ class ConversationViewController: UIViewController {
             scrollToBottomAnimated = true
         }
 
-        store?.listenForNewContent { (messages: [Message]) in
-            self.performCoreDataSave(messages: messages)
+        store?.listenForContentChanges { (messages: [Message], deleted: [Message]) in
+            self.performCoreDataSave(messages: messages, deleted: deleted)
         }
 
         messageInputView.text = ""
@@ -111,15 +111,25 @@ class ConversationViewController: UIViewController {
 }
 
 extension ConversationViewController {
-    func performCoreDataSave(messages: [Message]) {
+    func performCoreDataSave(messages: [Message], deleted: [Message]) {
         guard let channel = channel,
-              let coreDataStack = coreDataStack else { return }
+              let coreDataStack = coreDataStack,
+              let dataController = dataController else { return }
 
         coreDataStack.performSave { context in
             let channelDb = ChannelDb(channel: channel, in: context)
             messages.forEach { message in
-                let messageDb = MessageDb(message: message, in: context)
-                channelDb.addToMessages(messageDb)
+                if dataController.getMessageDb(message: message, context: context) == nil {
+                    let messageDb = MessageDb(message: message, in: context)
+                    channelDb.addToMessages(messageDb)
+                }
+            }
+
+            deleted.forEach { message in
+                if let messageDb = dataController.getMessageDb(message: message, context: context) {
+                    channelDb.removeFromMessages(messageDb)
+                    context.delete(messageDb)
+                }
             }
         }
     }

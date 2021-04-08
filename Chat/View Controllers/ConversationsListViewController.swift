@@ -52,7 +52,7 @@ class ConversationsListViewController: UITableViewController {
 
     var listenerCompletion: ([Channel], [Channel]) -> Void {
         return { channels, deleted in
-            self.performCoreDataUpdate(channels: channels, deleted: deleted)
+            self.performCoreDataSave(channels: channels, deleted: deleted)
         }
     }
 
@@ -118,16 +118,8 @@ class ConversationsListViewController: UITableViewController {
     }
 }
 
- extension ConversationsListViewController {
-    func performCoreDataSave(channels: [Channel]) {
-        self.coreDataStack.performSave { context in
-            channels.forEach { _ = ChannelDb(channel: $0, in: context) }
-        }
-    }
- }
-
 extension ConversationsListViewController {
-    func performCoreDataUpdate(channels: [Channel], deleted: [Channel]) {
+    func performCoreDataSave(channels: [Channel], deleted: [Channel]) {
 
         self.coreDataStack.performSave { context in
             channels.forEach { channel in
@@ -178,6 +170,27 @@ extension ConversationsListViewController {
         guard let channel = dataController.getChannel(at: indexPath) else { return }
         presentMessages(in: channel)
     }
+
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard let channel = dataController.getChannel(at: indexPath) else { return nil }
+
+        let handler: UIContextualAction.Handler = { (action, _, completion) in
+            if action.title == "Delete" {
+                self.store.removeChannel(id: channel.identifier) { (error) in
+                    var success = true
+                    if error != nil {
+                        success = false
+                    }
+                    completion(success)
+                }
+            }
+        }
+
+        let action = UIContextualAction(style: .destructive, title: "Delete", handler: handler)
+        let configuration = UISwipeActionsConfiguration(actions: [action])
+
+        return configuration
+    }
 }
 
 // MARK: - Navigation
@@ -202,42 +215,3 @@ extension ConversationsListViewController {
         navigationController?.pushViewController(conversationVC, animated: true)
     }
 }
-
-// extension ConversationsListViewController: NSFetchedResultsControllerDelegate {
-//
-//    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-//        self.tableView.beginUpdates()
-//    }
-//
-//    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-//        self.tableView.endUpdates()
-//        print("end updates from ConversationsListViewController")
-//
-//    }
-//
-//    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
-//                    didChange anObject: Any,
-//                    at indexPath: IndexPath?,
-//                    for type: NSFetchedResultsChangeType,
-//                    newIndexPath: IndexPath?) {
-//
-//        switch type {
-//        case .insert:
-//            guard let newIndexPath = newIndexPath else { return }
-//            tableView.insertRows(at: [newIndexPath], with: .automatic)
-//        case .move:
-//            guard let indexPath = indexPath,
-//                  let newIndexPath = newIndexPath else { return }
-//            tableView.deleteRows(at: [indexPath], with: .automatic)
-//            tableView.insertRows(at: [newIndexPath], with: .automatic)
-//        case .update:
-//            guard let indexPath = indexPath else { return }
-//            tableView.reloadRows(at: [indexPath], with: .automatic)
-//        case .delete:
-//            guard let indexPath = indexPath else { return }
-//            tableView.deleteRows(at: [indexPath], with: .automatic)
-//        default:
-//            return
-//        }
-//    }
-// }

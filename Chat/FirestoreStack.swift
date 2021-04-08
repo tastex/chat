@@ -34,17 +34,6 @@ class FirestoreStack {
         }
     }
 
-    func listenForNewContent<Item: FirestoreItem>(closure: @escaping ([Item]) -> Void) {
-        listener = reference.addSnapshotListener { snapshot, _ in
-            guard let documents = snapshot?.documents else { return }
-
-            let items = documents.compactMap { documentSnapshot -> Item? in
-                return Item(with: documentSnapshot)
-            }
-            closure(items)
-        }
-    }
-
     func listenForContentChanges<Item: FirestoreItem>(closure: @escaping (_ items: [Item], _ removed: [Item]) -> Void) {
         listener = reference.addSnapshotListener { snapshot, _ in
             guard let documentChanges = snapshot?.documentChanges else { return }
@@ -83,6 +72,15 @@ extension FirestoreStack {
             return reference.addDocument(data: ["name": name])
         default:
             return nil
+        }
+    }
+
+    func removeChannel(id: String, completion: ((Error?) -> Void)?) {
+        switch collection {
+        case .channels:
+            return reference.document(id).delete(completion: completion)
+        default:
+            return
         }
     }
 }

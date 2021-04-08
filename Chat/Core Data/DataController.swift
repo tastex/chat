@@ -136,6 +136,19 @@ extension DataController {
                               senderName: senderName)
         return message
     }
+
+    func getMessageDb(message: Message, context: NSManagedObjectContext) -> MessageDb? {
+
+        let frc = DataCollection.message(messageId: message.identifier).getFetchedResultsController(context: context)
+        guard let messageDb = frc.fetchedObjects?.first as? MessageDb else { return nil }
+        messageDb.content = message.content
+        messageDb.created = message.created
+        messageDb.senderId = message.senderId
+        messageDb.senderName = message.senderName
+
+        return messageDb
+
+    }
 }
 
 extension DataController: NSFetchedResultsControllerDelegate {
