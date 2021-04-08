@@ -13,6 +13,8 @@ class DataController: NSObject {
     enum DataCollection {
         case channels
         case messages(channelId: String)
+        case channel(channelId: String)
+        case message(messageId: String)
     }
 
     var didChangeContentClosure: (() -> Void)?
@@ -38,7 +40,7 @@ class DataController: NSObject {
 }
 
 extension DataController.DataCollection {
-    func getFetchedResultsController(context: NSManagedObjectContext, delegate: NSFetchedResultsControllerDelegate?) -> NSFetchedResultsController<NSFetchRequestResult> {
+    func getFetchedResultsController(context: NSManagedObjectContext, delegate: NSFetchedResultsControllerDelegate? = nil) -> NSFetchedResultsController<NSFetchRequestResult> {
 
         let request: NSFetchRequest<NSFetchRequestResult>
         switch self {
@@ -50,6 +52,18 @@ extension DataController.DataCollection {
             request = MessageDb.fetchRequest()
             request.predicate = NSPredicate(format: "channel.identifier == %@", channelID)
             let sortDescriptor = NSSortDescriptor(key: "created", ascending: true)
+            request.sortDescriptors = [sortDescriptor]
+        case .channel(let channelID):
+            request = ChannelDb.fetchRequest()
+            request.predicate = NSPredicate(format: "identifier == %@", channelID)
+            request.fetchLimit = 1
+            let sortDescriptor = NSSortDescriptor(key: "lastActivity", ascending: false)
+            request.sortDescriptors = [sortDescriptor]
+        case .message(let messageId):
+            request = MessageDb.fetchRequest()
+            request.predicate = NSPredicate(format: "identifier == %@", messageId)
+            request.fetchLimit = 1
+            let sortDescriptor = NSSortDescriptor(key: "created", ascending: false)
             request.sortDescriptors = [sortDescriptor]
         }
 
@@ -90,6 +104,18 @@ extension DataController {
                               lastMessage: channelDb.lastMessage,
                               lastActivity: channelDb.lastActivity)
         return channel
+
+    }
+
+    func getChannelDb(channel: Channel, context: NSManagedObjectContext) -> ChannelDb? {
+
+        let frc = DataCollection.channel(channelId: channel.identifier).getFetchedResultsController(context: context)
+        guard let channelDb = frc.fetchedObjects?.first as? ChannelDb else { return nil }
+        channelDb.name = channel.name
+        channelDb.lastActivity = channel.lastActivity
+        channelDb.lastMessage = channel.lastMessage
+
+        return channelDb
 
     }
 

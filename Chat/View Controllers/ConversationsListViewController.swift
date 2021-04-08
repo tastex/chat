@@ -50,18 +50,16 @@ class ConversationsListViewController: UITableViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    var listenerCompletion: ([Channel]) -> Void {
-        return { channels in
-            self.performCoreDataSave(channels: channels)
+    var listenerCompletion: ([Channel], [Channel]) -> Void {
+        return { channels, deleted in
+            self.performCoreDataUpdate(channels: channels, deleted: deleted)
         }
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        store.listenForNewContent(closure: listenerCompletion)
-
-        store.listenForContentChanges { (_: [Channel]) in  }
+        store.listenForContentChanges(closure: listenerCompletion)
 
         let profileView = ProfileLogoView(frame: CGRect(origin: .zero, size: CGSize(width: 40, height: 40)))
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(profileButtonTap(_:)))
@@ -128,6 +126,33 @@ class ConversationsListViewController: UITableViewController {
     }
  }
 
+extension ConversationsListViewController {
+    func performCoreDataUpdate(channels: [Channel], deleted: [Channel]) {
+
+        self.coreDataStack.performSave { context in
+            channels.forEach { channel in
+                let channelDb = self.dataController.getChannelDb(channel: channel, context: context)
+
+                if channelDb == nil {
+                    _ = ChannelDb(channel: channel, in: context)
+                    print("added channel -> \(channel)")
+                } else {
+                    print("modified channel -> \(channel)")
+                }
+            }
+
+            deleted.forEach { channel in
+                if let channelDb = self.dataController.getChannelDb(channel: channel, context: context) {
+                    context.delete(channelDb)
+                    print("deleted channel -> \(channel)")
+                } else {
+                    print("no need to delete channel -> \(channel)")
+                }
+            }
+        }
+    }
+}
+
 // MARK: - Table view data source
 extension ConversationsListViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -171,7 +196,7 @@ extension ConversationsListViewController {
         conversationVC.coreDataStack = coreDataStack
         conversationVC.dismissHandler = { [weak self] in
             guard let self = self else { return }
-            self.store.listenForNewContent(closure: self.listenerCompletion)
+            self.store.listenForContentChanges(closure: self.listenerCompletion)
             self.dataController.startTrackChanges()
         }
         navigationController?.pushViewController(conversationVC, animated: true)
