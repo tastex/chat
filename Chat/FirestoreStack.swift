@@ -37,24 +37,18 @@ class FirestoreStack {
     func listenForContentChanges<Item: FirestoreItem>(closure: @escaping (_ items: [Item], _ removed: [Item]) -> Void) {
         listener = reference.addSnapshotListener { snapshot, _ in
             guard let documentChanges = snapshot?.documentChanges else { return }
-
-            var items = [Item]()
-            var removed = [Item]()
-            documentChanges.forEach { (change) in
+            documentChanges.forEach { change in
                 guard let item = Item(with: change.document) else { return }
-
+                var items = [Item]()
+                var removed = [Item]()
                 switch change.type {
                 case .added:
                     items.append(item)
-                    print("added item: \(String(describing: item))")
                 case .modified:
                     items.append(item)
-                    print("modified item: \(String(describing: item))")
                 case .removed:
                     removed.append(item)
-                    print("removed item: \(String(describing: item))")
                 }
-
                 closure(items, removed)
             }
         }
@@ -93,6 +87,15 @@ extension FirestoreStack {
                                          "created": Timestamp(date: created ?? Date()),
                                          "senderId": senderId,
                                          "senderName": senderName])
+        default:
+            return
+        }
+    }
+
+    func removeMessage(id: String, completion: ((Error?) -> Void)?) {
+        switch collection {
+        case .messages:
+            return reference.document(id).delete(completion: completion)
         default:
             return
         }

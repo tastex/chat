@@ -30,7 +30,6 @@ class ConversationsListViewController: UITableViewController {
 
     private lazy var store = FirestoreStack(collection: .channels)
     private lazy var dataController: DataController = {
-        tableView.tag = 1
         return DataController(for: .channels, tableView: tableView, in: coreDataStack.mainContext)
     }()
 
@@ -120,25 +119,16 @@ class ConversationsListViewController: UITableViewController {
 
 extension ConversationsListViewController {
     func performCoreDataSave(channels: [Channel], deleted: [Channel]) {
-
         self.coreDataStack.performSave { context in
             channels.forEach { channel in
                 let channelDb = self.dataController.getChannelDb(channel: channel, context: context)
-
-                if channelDb == nil {
+                if  channelDb == nil {
                     _ = ChannelDb(channel: channel, in: context)
-                    print("added channel -> \(channel)")
-                } else {
-                    print("modified channel -> \(channel)")
                 }
             }
-
             deleted.forEach { channel in
                 if let channelDb = self.dataController.getChannelDb(channel: channel, context: context) {
                     context.delete(channelDb)
-                    print("deleted channel -> \(channel)")
-                } else {
-                    print("no need to delete channel -> \(channel)")
                 }
             }
         }

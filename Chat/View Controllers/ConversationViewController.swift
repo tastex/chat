@@ -28,7 +28,6 @@ class ConversationViewController: UIViewController {
     lazy var dataController: DataController? = {
         guard let channel = channel,
               let coreDataStack = coreDataStack else { return nil }
-        tableView.tag = 2
         return DataController(for: .messages(channelId: channel.identifier), tableView: tableView, in: coreDataStack.mainContext)
     }()
 

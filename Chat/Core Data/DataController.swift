@@ -159,7 +159,6 @@ extension DataController: NSFetchedResultsControllerDelegate {
 
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         self.tableView.endUpdates()
-        print("end updates from DataController - \(self.tableView.tag)")
         didChangeContentClosure?()
     }
 
@@ -170,25 +169,20 @@ extension DataController: NSFetchedResultsControllerDelegate {
                     newIndexPath: IndexPath?) {
         switch type {
         case .insert:
-            print("insert")
             guard let newIndexPath = newIndexPath else { return }
             tableView.insertRows(at: [newIndexPath], with: .automatic)
         case .move:
-            print("move")
             guard let indexPath = indexPath,
                   let newIndexPath = newIndexPath else { return }
             tableView.deleteRows(at: [indexPath], with: .automatic)
             tableView.insertRows(at: [newIndexPath], with: .automatic)
         case .update:
-            print("update")
             guard let indexPath = indexPath else { return }
             tableView.reloadRows(at: [indexPath], with: .automatic)
         case .delete:
-            print("delete")
             guard let indexPath = indexPath else { return }
             tableView.deleteRows(at: [indexPath], with: .automatic)
         default:
-            print("unknown")
             return
         }
     }
