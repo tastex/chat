@@ -99,9 +99,7 @@ class ConversationsListViewController: UITableViewController {
     
     @objc
     func profileButtonTap(_ sender: UITapGestureRecognizer) {
-        guard let profileVC = UIStoryboard(name: "Main", bundle: .main)
-                .instantiateViewController(withIdentifier: String(describing: ProfileViewController.self)) as? ProfileViewController else { return }
-        
+        guard let profileVC = ProfileViewController.instantiate() else { return }
         profileVC.setProfile(profile: UserProfile.defaultProfile)
         let navigationVC = UINavigationController(rootViewController: profileVC)
         navigationVC.navigationBar.prefersLargeTitles = true

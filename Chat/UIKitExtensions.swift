@@ -1,5 +1,5 @@
 //
-//  ChatExtensions.swift
+//  UIKitExtensions.swift
 //  Chat
 //
 //  Created by VB on 08.04.2021.
@@ -14,5 +14,15 @@ public extension UIImage {
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return image
+    }
+}
+
+extension UIAlertController {
+    func pruneNegativeWidthConstraints() {
+        for subView in self.view.subviews {
+            for constraint in subView.constraints where constraint.debugDescription.contains("width == - 16") {
+                subView.removeConstraint(constraint)
+            }
+        }
     }
 }

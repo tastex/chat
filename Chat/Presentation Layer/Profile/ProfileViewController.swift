@@ -8,8 +8,19 @@
 import UIKit
 import AVFoundation
 
+ extension ProfileViewController {
+    fileprivate static var storyboardName: String { "Profile" }
+    fileprivate static var storyboardIdentifier: String { String(describing: ProfileViewController.self) }
+
+    static func instantiate() -> ProfileViewController? {
+        guard let controller = UIStoryboard(name: storyboardName, bundle: .main)
+                .instantiateViewController(withIdentifier: storyboardIdentifier) as? ProfileViewController else { return nil }
+        return controller
+    }
+ }
+
 class ProfileViewController: UIViewController, UINavigationControllerDelegate {
-    
+
     struct Profile {
         var name: String?
         var bio: String?
@@ -17,7 +28,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     private var draft: Profile?
-    private var profile: UserProfile? {
+    private var profile: UserProfileProtocol? {
         didSet {
             configure()
         }
@@ -53,10 +64,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     func setProfile(profile: UserProfileProtocol) {
-        if let profile = profile as? UserProfile {
-            self.profile = profile
-        }
-        
+        self.profile = profile
     }
     
     func configure() {
@@ -250,16 +258,6 @@ extension ProfileViewController: UIImagePickerControllerDelegate {
     
     private func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
         return input.rawValue
-    }
-}
-
-extension UIAlertController {
-    func pruneNegativeWidthConstraints() {
-        for subView in self.view.subviews {
-            for constraint in subView.constraints where constraint.debugDescription.contains("width == - 16") {
-                subView.removeConstraint(constraint)
-            }
-        }
     }
 }
 
