@@ -34,24 +34,3 @@ class ConversationCell: UITableViewCell {
         messageLabel.font = messageLabelFont
     }
 }
-
-extension DateFormatter {
-    static func stringDescribing(date: Date?) -> String {
-        guard let date = date else { return "Sometime" }
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd MMM HH:mm"
-        if Calendar.current.isDateInToday(date) {
-            formatter.dateFormat = "HH:mm"
-        }
-        return formatter.string(from: date)
-    }
-}
-
-extension UIColor {
-    static func conversationsCellBackground(online: Bool = false) -> UIColor? {
-        if online {
-            return UIColor(red: 1.0, green: 1.0, blue: 0.0, alpha: 0.1)
-        }
-        return nil
-    }
-}

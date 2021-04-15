@@ -27,6 +27,6 @@
     </entity>
     <elements>
         <element name="ChannelDb" positionX="-332.40234375" positionY="-16.98046875" width="150.07421875" height="118"/>
-        <element name="MessageDb" positionX="-122.4921875" positionY="-16.3359375" width="128" height="133"/>
+        <element name="MessageDb" positionX="-38.73046875" positionY="97.00390625" width="128" height="133"/>
     </elements>
 </model>

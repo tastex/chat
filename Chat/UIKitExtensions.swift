@@ -7,7 +7,7 @@
 
 import UIKit
 
-public extension UIImage {
+extension UIImage {
     func copy(newSize: CGSize) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(newSize, false, 0)
         self.draw(in: CGRect(origin: .zero, size: newSize))

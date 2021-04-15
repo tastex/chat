@@ -7,6 +7,11 @@
 
 import UIKit
 
+protocol ThemesPickerDelegate: AnyObject {
+    func didSelectTheme(_ theme: Theme)
+    func updateAppearance(viewController: UIViewController)
+}
+
 class ThemeController: ThemesPickerDelegate {
 
     var theme = Theme.current
@@ -32,11 +37,6 @@ class ThemeController: ThemesPickerDelegate {
             updateSubviews(view.subviews)
         }
     }
-}
-
-protocol ThemesPickerDelegate: AnyObject {
-    func didSelectTheme(_ theme: Theme)
-    func updateAppearance(viewController: UIViewController)
 }
 
 enum Theme: Int, CaseIterable {

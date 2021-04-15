@@ -9,20 +9,6 @@ import UIKit
 import Firebase
 import CoreData
 
-struct Channel {
-    let identifier: String
-    let name: String
-    let lastMessage: String?
-    let lastActivity: Date?
-
-    init(identifier: String, name: String, lastMessage: String?, lastActivity: Date?) {
-        self.identifier = identifier
-        self.name = name
-        self.lastMessage = lastMessage
-        self.lastActivity = lastActivity
-    }
-}
-
 class ConversationsListViewController: UITableViewController {
 
     let coreDataStack: CoreDataStack
@@ -72,7 +58,11 @@ class ConversationsListViewController: UITableViewController {
                                                style: .plain,
                                                target: self,
                                                action: #selector(newChannelButtonTap))
-        self.navigationItem.rightBarButtonItems = [profileBarButtonItem, newChannelButton]
+        let printCoreDataStatButton = UIBarButtonItem(title: "stats",
+                                                      style: .plain,
+                                                      target: self,
+                                                      action: #selector(printCoreDataStat))
+        self.navigationItem.rightBarButtonItems = [profileBarButtonItem, newChannelButton, printCoreDataStatButton]
 
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "gear"),
                                                                 style: .plain,
@@ -84,7 +74,12 @@ class ConversationsListViewController: UITableViewController {
         super.viewDidDisappear(animated)
         store.stopListening()
     }
-    
+
+    @objc
+    func printCoreDataStat() {
+        coreDataStack.printDatabaseStatistice() // TODO
+    }
+
     @objc
     func newChannelButtonTap() {
         let alert = UIAlertController(title: "Create New Channel", message: nil, preferredStyle: .alert)
@@ -113,8 +108,7 @@ class ConversationsListViewController: UITableViewController {
     
     @objc
     func settingsButtonTap() {
-        guard let themesVC = UIStoryboard(name: "Main", bundle: .main)
-                .instantiateViewController(withIdentifier: String(describing: ThemesViewController.self)) as? ThemesViewController else { return }
+        guard let themesVC = ThemesViewController.instantiate() else { return }
         themesVC.themePickerDelegate = themeController
         self.navigationController?.pushViewController(themesVC, animated: true)
     }
@@ -189,17 +183,11 @@ extension ConversationsListViewController {
 // MARK: - Navigation
 extension ConversationsListViewController {
     func presentMessages(in channel: Channel) {
-        guard let conversationVC = UIStoryboard(name: "Main", bundle: .main)
-                .instantiateViewController(withIdentifier:
-                                            String(describing: ConversationViewController.self))
-                as? ConversationViewController else {
+        guard let conversationVC = ConversationViewController.instantiate(channel: channel, coreDataStack: coreDataStack) else {
             return
         }
         store.stopListening()
         dataController.stopTrackChanges()
-
-        conversationVC.channel = channel
-        conversationVC.coreDataStack = coreDataStack
         conversationVC.dismissHandler = { [weak self] in
             guard let self = self else { return }
             self.store.listenForContentChanges(closure: self.listenerCompletion)
