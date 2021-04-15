@@ -20,22 +20,25 @@ class ProfileLogoView: UIView {
         super.init(coder: coder)
     }
     
-    func configure() {
+    func configure(profileData: UserProfileProtocol? = UserProfile.defaultProfile) {
+
+        guard let profileData = profileData else { return }
+
         self.subviews.forEach { (subview) in
             subview.removeFromSuperview()
         }
         
         let profileLabelView = UILabel(frame: CGRect(origin: .zero, size: frame.size))
-        profileLabelView.backgroundColor = UserProfile.defaultProfile.nameInitialsBackgroundColor
-        profileLabelView.text = UserProfile.defaultProfile.nameInitials
+        profileLabelView.backgroundColor = profileData.nameInitialsBackgroundColor
+        profileLabelView.text = profileData.nameInitials
         profileLabelView.textAlignment = .center
         profileLabelView.font = font
         self.addSubview(profileLabelView)
         
         let profileImageView = UIImageView(frame: CGRect(origin: .zero, size: frame.size))
-        profileImageView.image = UserProfile.defaultProfile.image?.copy(newSize: frame.size)
+        profileImageView.image = profileData.image?.copy(newSize: frame.size)
         self.addSubview(profileImageView)
-        if UserProfile.defaultProfile.image != nil {
+        if profileData.image != nil {
             profileImageView.isHidden = false
             profileLabelView.isHidden = true
         } else {

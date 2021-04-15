@@ -12,68 +12,76 @@ import AVFoundation
     fileprivate static var storyboardName: String { "Profile" }
     fileprivate static var storyboardIdentifier: String { String(describing: ProfileViewController.self) }
 
-    static func instantiate() -> ProfileViewController? {
+    static func instantiate(profile: UserProfileProtocol) -> ProfileViewController? {
         guard let controller = UIStoryboard(name: storyboardName, bundle: .main)
                 .instantiateViewController(withIdentifier: storyboardIdentifier) as? ProfileViewController else { return nil }
+        controller.profile = profile
         return controller
     }
  }
 
 class ProfileViewController: UIViewController, UINavigationControllerDelegate {
 
-    struct Profile {
-        var name: String?
-        var bio: String?
-        var image: UIImage?
-    }
+    var dismissHandler: (() -> Void)?
+
+    private var profile: UserProfileProtocol?
+    private lazy var draft: UserProfileProtocol? = {
+        guard let profile = profile else { return nil }
+        return UserProfile(name: profile.name, bio: profile.bio, image: profile.image)
+    }()
     
-    private var draft: Profile?
-    private var profile: UserProfileProtocol? {
-        didSet {
-            configure()
-        }
-    }
+    private var imagePickerController = UIImagePickerController()
+    private var activeTextView: UITextView?
+    private var lastOffset: CGPoint?
     
-    var image: UIImage? {
-        didSet {
-            logoContainerView?.configure()
-        }
-    }
+    @IBOutlet private weak var logoContainerView: ProfileLogoView?
     
-    var imagePickerController = UIImagePickerController()
-    var activeTextView: UITextView?
-    var lastOffset: CGPoint?
+    @IBOutlet private weak var scrollView: UIScrollView!
+    @IBOutlet private weak var contentView: UIView!
+    @IBOutlet private weak var nameTextView: UITextView!
+    @IBOutlet private weak var bioTextView: UITextView!
     
-    @IBOutlet weak var logoContainerView: ProfileLogoView?
+    @IBOutlet private weak var saveGCDButton: UIButton!
+    @IBOutlet private weak var saveOperationsButton: UIButton!
+    @IBOutlet private weak var cancelButton: UIButton!
+    @IBOutlet private weak var editButton: UIButton!
     
-    @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var contentView: UIView!
-    @IBOutlet weak var nameTextView: UITextView!
-    @IBOutlet weak var bioTextView: UITextView!
-    
-    @IBOutlet weak var saveGCDButton: UIButton!
-    @IBOutlet weak var saveOperationsButton: UIButton!
-    @IBOutlet weak var cancelButton: UIButton!
-    @IBOutlet weak var editButton: UIButton!
-    
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     required init?(coder: NSCoder) {
         super .init(coder: coder)
         title = "Profile"
     }
-    
-    func setProfile(profile: UserProfileProtocol) {
-        self.profile = profile
-    }
-    
+
     func configure() {
-        guard let profile = profile else {
+        guard let draft = draft else {
             return
         }
-        nameTextView?.text = profile.name
-        bioTextView?.text = profile.bio
-        image = profile.image
+        nameTextView?.text = draft.name
+        bioTextView?.text = draft.bio
+        logoContainerView?.configure(profileData: draft)
+    }
+
+    func saveData() {
+        guard let draft = draft,
+              var profile = profile else {
+            return
+        }
+        profile.name = draft.name
+        profile.bio = draft.bio
+        profile.image = draft.image
+        configure()
+    }
+
+    func revertData() {
+        guard var draft = draft,
+              let profile = profile else {
+            return
+        }
+        draft.name = profile.name
+        draft.bio = profile.bio
+        draft.image = profile.image
+        configure()
     }
     
     override func viewDidLoad() {
@@ -86,14 +94,13 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
         
         nameTextView.delegate = self
         bioTextView.delegate = self
-        
+        imagePickerController.delegate = self
+
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done",
                                                                  style: .done,
                                                                  target: self,
                                                                  action: #selector(doneButtonTap(_:)))
-        
-        imagePickerController.delegate = self
-        
+
         if let logoContainerView = logoContainerView {
             let logoTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(logoTap(_:)))
             logoContainerView.addGestureRecognizer(logoTapRecognizer)
@@ -125,6 +132,8 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     
     @objc
     func logoTap(_ sender: Any) {
+        guard nameTextView.isEditable else { return }
+
         let alert = UIAlertController(title: nil, message: "Change Profile Logo", preferredStyle: .actionSheet)
         alert.pruneNegativeWidthConstraints()
         alert.addAction(.init(title: "Chose Photo", style: .default) { [self]_ in
@@ -135,6 +144,12 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
                 showImagePicker(sourceType: .camera)
             })
         }
+        if draft?.image != nil {
+            alert.addAction(.init(title: "Remove Photo", style: .destructive) { [self]_ in
+                draft?.image = nil
+                configure()
+            })
+        }
         alert.addAction(.init(title: "Cancel", style: .cancel))
         present(alert, animated: true, completion: nil)
     }
@@ -142,9 +157,11 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     func updateButtonVisibility() {
         isSavingData = false
         activityIndicator.stopAnimating()
-        [editButton, cancelButton, saveGCDButton, saveOperationsButton].forEach { button in
-            if let button = button {
-                button.isHidden.toggle()
+        UIView.performWithoutAnimation {
+            [editButton, cancelButton, saveGCDButton, saveOperationsButton].forEach { button in
+                if let button = button {
+                    button.isHidden.toggle()
+                }
             }
         }
     }
@@ -160,39 +177,38 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     @IBAction func editButtonTap(_ sender: Any) {
-        updateButtonVisibility()
         nameTextView.isEditable = true
+        nameTextView.becomeFirstResponder()
         bioTextView.isEditable = true
+        updateButtonVisibility()
     }
     
     @IBAction func cancelButtonTap(_ sender: Any) {
         updateButtonVisibility()
         nameTextView.isEditable = false
         bioTextView.isEditable = false
-        
+        revertData()
     }
     
     @IBAction func saveGCDButtonTap(_ sender: Any) {
         activityIndicator.startAnimating()
         isSavingData = true
+        saveData()
         print(#function)
     }
     
     @IBAction func saveOperationsButtonTap(_ sender: Any) {
         activityIndicator.startAnimating()
         isSavingData = true
+        saveData()
         print(#function)
     }
-    
 }
 
 extension ProfileViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if let presentingViewController = self.presentingViewController?.children.first as? ConversationsListViewController,
-           let profileLogoView = presentingViewController.navigationItem.rightBarButtonItem?.customView as? ProfileLogoView {
-            profileLogoView.configure()
-        }
+        dismissHandler?()
     }
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -239,10 +255,8 @@ extension ProfileViewController: UIImagePickerControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
         if let image = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.editedImage)] as? UIImage {
-            
-            UserProfile.defaultProfile.image = image
-            self.image = UserProfile.defaultProfile.image
-            
+            draft?.image = image
+            configure()
             dismiss(animated: true)
         }
     }
@@ -271,6 +285,14 @@ extension ProfileViewController: UITextViewDelegate {
     }
     
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
+
+        if textView == nameTextView {
+            draft?.name = textView.text
+            configure()
+        } else if textView == bioTextView {
+            draft?.bio = textView.text
+        }
+
         returnTextView(nil)
         return true
     }

@@ -33,6 +33,10 @@ class ConversationsListViewController: UITableViewController {
         return DataController(for: .channels, tableView: tableView, in: coreDataStack.mainContext)
     }()
 
+    private lazy var profileView: ProfileLogoView = {
+        ProfileLogoView(frame: CGRect(origin: .zero, size: CGSize(width: 40, height: 40)))
+    }()
+
     private let cellIdentifier = String(describing: ConversationCell.self)
 
     init(style: UITableView.Style, coreDataStack: CoreDataStack) {
@@ -60,7 +64,6 @@ class ConversationsListViewController: UITableViewController {
 
         store.listenForContentChanges(closure: listenerCompletion)
 
-        let profileView = ProfileLogoView(frame: CGRect(origin: .zero, size: CGSize(width: 40, height: 40)))
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(profileButtonTap(_:)))
         profileView.addGestureRecognizer(tapGestureRecognizer)
         let profileBarButtonItem = UIBarButtonItem(customView: profileView)
@@ -99,8 +102,10 @@ class ConversationsListViewController: UITableViewController {
     
     @objc
     func profileButtonTap(_ sender: UITapGestureRecognizer) {
-        guard let profileVC = ProfileViewController.instantiate() else { return }
-        profileVC.setProfile(profile: UserProfile.defaultProfile)
+        guard let profileVC = ProfileViewController.instantiate(profile: UserProfile.defaultProfile) else { return }
+        profileVC.dismissHandler = {
+            self.profileView.configure()
+        }
         let navigationVC = UINavigationController(rootViewController: profileVC)
         navigationVC.navigationBar.prefersLargeTitles = true
         self.navigationController?.present(navigationVC, animated: true, completion: nil)

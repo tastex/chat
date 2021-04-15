@@ -186,7 +186,7 @@
 		BCC9A8D32626250100A54518 /* Presentation Layer */ = {
 			isa = PBXGroup;
 			children = (
-				BCC9A8D52626259100A54518 /* Profile */,
+				BCC9A8D52626259100A54518 /* Profile Screen */,
 			);
 			path = "Presentation Layer";
 			sourceTree = "<group>";
@@ -198,13 +198,13 @@
 			path = "Service Layer";
 			sourceTree = "<group>";
 		};
-		BCC9A8D52626259100A54518 /* Profile */ = {
+		BCC9A8D52626259100A54518 /* Profile Screen */ = {
 			isa = PBXGroup;
 			children = (
 				BC1015DD2601B4EB006F63AC /* ProfileViewController.swift */,
 				BCC9A8D6262625C900A54518 /* Profile.storyboard */,
 			);
-			path = Profile;
+			path = "Profile Screen";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
