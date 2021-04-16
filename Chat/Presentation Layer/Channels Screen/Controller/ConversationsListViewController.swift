@@ -65,11 +65,7 @@ class ConversationsListViewController: UITableViewController {
                                                style: .plain,
                                                target: self,
                                                action: #selector(newChannelButtonTap))
-        let printCoreDataStatButton = UIBarButtonItem(title: "stats",
-                                                      style: .plain,
-                                                      target: self,
-                                                      action: #selector(printCoreDataStat))
-        self.navigationItem.rightBarButtonItems = [profileBarButtonItem, newChannelButton, printCoreDataStatButton]
+        self.navigationItem.rightBarButtonItems = [profileBarButtonItem, newChannelButton]
 
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "gear"),
                                                                 style: .plain,
@@ -80,11 +76,6 @@ class ConversationsListViewController: UITableViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         store.stopListening()
-    }
-
-    @objc
-    func printCoreDataStat() {
-        coreDataService.printDatabaseStatistice() // TODO
     }
 
     @objc
