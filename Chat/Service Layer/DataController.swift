@@ -111,10 +111,6 @@ extension DataController {
 
         let frc = DataCollection.channel(channelId: channel.identifier).getFetchedResultsController(context: context)
         guard let channelDb = frc.fetchedObjects?.first as? ChannelDb else { return nil }
-        channelDb.name = channel.name
-        channelDb.lastActivity = channel.lastActivity
-        channelDb.lastMessage = channel.lastMessage
-
         return channelDb
 
     }
@@ -141,11 +137,6 @@ extension DataController {
 
         let frc = DataCollection.message(messageId: message.identifier).getFetchedResultsController(context: context)
         guard let messageDb = frc.fetchedObjects?.first as? MessageDb else { return nil }
-        messageDb.content = message.content
-        messageDb.created = message.created
-        messageDb.senderId = message.senderId
-        messageDb.senderName = message.senderName
-
         return messageDb
 
     }

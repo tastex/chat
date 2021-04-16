@@ -12,11 +12,11 @@ extension ConversationViewController {
     fileprivate static var storyboardName: String { "Conversation" }
     fileprivate static var storyboardIdentifier: String { String(describing: ConversationViewController.self) }
 
-    static func instantiate(channel: Channel, coreDataStack: CoreDataStack?) -> ConversationViewController? {
+    static func instantiate(channel: Channel, coreDataService: CoreDataServiceProtocol?) -> ConversationViewController? {
         guard let controller = UIStoryboard(name: storyboardName, bundle: .main)
                 .instantiateViewController(withIdentifier: storyboardIdentifier) as? ConversationViewController else { return nil }
         controller.channel = channel
-        controller.coreDataStack = coreDataStack
+        controller.coreDataService = coreDataService
         return controller
     }
 }
@@ -26,7 +26,7 @@ class ConversationViewController: UIViewController {
     var dismissHandler: (() -> Void)?
 
     private var channel: Channel?
-    private var coreDataStack: CoreDataStack?
+    private var coreDataService: CoreDataServiceProtocol?
 
     private lazy var store: FirestoreStack? = {
         guard let channel = channel else { return nil }
@@ -34,8 +34,8 @@ class ConversationViewController: UIViewController {
     }()
     private lazy var dataController: DataController? = {
         guard let channel = channel,
-              let coreDataStack = coreDataStack else { return nil }
-        return DataController(for: .messages(channelId: channel.identifier), tableView: tableView, in: coreDataStack.mainContext)
+              let coreDataService = coreDataService else { return nil }
+        return DataController(for: .messages(channelId: channel.identifier), tableView: tableView, in: coreDataService.mainContext)
     }()
 
     private let cellIdentifierIncoming = "MessageCellIncoming"
@@ -117,25 +117,13 @@ class ConversationViewController: UIViewController {
 extension ConversationViewController {
     func performCoreDataSave(messages: [Message], deleted: [Message]) {
         guard let channel = channel,
-              let coreDataStack = coreDataStack,
+              let coreDataService = coreDataService,
               let dataController = dataController else { return }
 
-        coreDataStack.performSave { context in
-            let channelDb = ChannelDb(channel: channel, in: context)
-            messages.forEach { message in
-                if dataController.getMessageDb(message: message, context: context) == nil {
-                    let messageDb = MessageDb(message: message, in: context)
-                    channelDb.addToMessages(messageDb)
-                }
-            }
-
-            deleted.forEach { message in
-                if let messageDb = dataController.getMessageDb(message: message, context: context) {
-                    channelDb.removeFromMessages(messageDb)
-                    context.delete(messageDb)
-                }
-            }
-        }
+        coreDataService.performSave(dataController: dataController,
+                                    channel: channel,
+                                    messages: messages,
+                                    deleted: deleted)
     }
 }
 

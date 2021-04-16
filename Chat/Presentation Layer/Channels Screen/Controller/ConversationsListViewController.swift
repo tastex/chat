@@ -9,14 +9,21 @@ import UIKit
 import Firebase
 import CoreData
 
+extension ConversationsListViewController {
+    static func instantiate(coreDataService: CoreDataServiceProtocol?) -> ConversationsListViewController? {
+        guard let coreDataService = coreDataService else { return nil }
+        return ConversationsListViewController(style: .grouped, coreDataService: coreDataService)
+    }
+}
+
 class ConversationsListViewController: UITableViewController {
 
-    let coreDataStack: CoreDataStack
+    let coreDataService: CoreDataServiceProtocol
     let themeController = ThemeController()
 
     private lazy var store = FirestoreStack(collection: .channels)
     private lazy var dataController: DataController = {
-        return DataController(for: .channels, tableView: tableView, in: coreDataStack.mainContext)
+        return DataController(for: .channels, tableView: tableView, in: coreDataService.mainContext)
     }()
 
     private lazy var profileView: ProfileLogoView = {
@@ -25,8 +32,8 @@ class ConversationsListViewController: UITableViewController {
 
     private let cellIdentifier = String(describing: ConversationCell.self)
 
-    init(style: UITableView.Style, coreDataStack: CoreDataStack) {
-        self.coreDataStack = coreDataStack
+    init(style: UITableView.Style, coreDataService: CoreDataServiceProtocol) {
+        self.coreDataService = coreDataService
         super.init(style: style)
 
         title = "Channels"
@@ -77,7 +84,7 @@ class ConversationsListViewController: UITableViewController {
 
     @objc
     func printCoreDataStat() {
-        coreDataStack.printDatabaseStatistice() // TODO
+        coreDataService.printDatabaseStatistice() // TODO
     }
 
     @objc
@@ -116,19 +123,7 @@ class ConversationsListViewController: UITableViewController {
 
 extension ConversationsListViewController {
     func performCoreDataSave(channels: [Channel], deleted: [Channel]) {
-        self.coreDataStack.performSave { context in
-            channels.forEach { channel in
-                let channelDb = self.dataController.getChannelDb(channel: channel, context: context)
-                if  channelDb == nil {
-                    _ = ChannelDb(channel: channel, in: context)
-                }
-            }
-            deleted.forEach { channel in
-                if let channelDb = self.dataController.getChannelDb(channel: channel, context: context) {
-                    context.delete(channelDb)
-                }
-            }
-        }
+        coreDataService.performSave(dataController: dataController, channels: channels, deleted: deleted)
     }
 }
 
@@ -183,7 +178,7 @@ extension ConversationsListViewController {
 // MARK: - Navigation
 extension ConversationsListViewController {
     func presentMessages(in channel: Channel) {
-        guard let conversationVC = ConversationViewController.instantiate(channel: channel, coreDataStack: coreDataStack) else {
+        guard let conversationVC = ConversationViewController.instantiate(channel: channel, coreDataService: coreDataService) else {
             return
         }
         store.stopListening()
