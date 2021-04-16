@@ -59,18 +59,23 @@ class CoreDataService: CoreDataServiceProtocol {
 
     func performSave(dataController: DataController, channel: Channel, messages: [Message], deleted: [Message]) {
         coreDataStack.performSave { context in
-            guard let channelDb = dataController.getChannelDb(channel: channel, context: context) else { return }
+            var channelDb = dataController.getChannelDb(channel: channel, context: context)
+            if channelDb == nil {
+                channelDb = ChannelDb(channel: channel, in: context)
+            }
+
+            guard let channelDbUnwrapped = channelDb else { return }
 
             messages.forEach { message in
                 if dataController.getMessageDb(message: message, context: context) == nil {
                     let messageDb = MessageDb(message: message, in: context)
-                    channelDb.addToMessages(messageDb)
+                    channelDbUnwrapped.addToMessages(messageDb)
                 }
             }
 
             deleted.forEach { message in
                 if let messageDb = dataController.getMessageDb(message: message, context: context) {
-                    channelDb.removeFromMessages(messageDb)
+                    channelDbUnwrapped.removeFromMessages(messageDb)
                     context.delete(messageDb)
                 }
             }

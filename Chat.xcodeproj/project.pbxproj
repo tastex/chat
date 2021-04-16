@@ -175,7 +175,6 @@
 		BCC9A8D2262624F100A54518 /* Core Layer */ = {
 			isa = PBXGroup;
 			children = (
-				BC92234F26126A6300B54A2E /* FirestoreStack.swift */,
 				BC556C692610DE6B0094C23F /* Core Data */,
 			);
 			path = "Core Layer";
@@ -197,6 +196,7 @@
 			children = (
 				BCD2F65A262909CD0036329C /* CoreDataService.swift */,
 				BC369163261D76C600E613C2 /* DataController.swift */,
+				BC92234F26126A6300B54A2E /* FirestoreStack.swift */,
 			);
 			path = "Service Layer";
 			sourceTree = "<group>";
