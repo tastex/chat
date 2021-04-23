@@ -37,6 +37,7 @@ class ProfileLogoView: UIView {
         
         let profileImageView = UIImageView(frame: CGRect(origin: .zero, size: frame.size))
         profileImageView.image = profileData.image?.copy(newSize: frame.size)
+        profileImageView.contentMode = .center
         self.addSubview(profileImageView)
         if profileData.image != nil {
             profileImageView.isHidden = false

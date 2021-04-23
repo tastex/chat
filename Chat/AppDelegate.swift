@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
-        coreDataService.printDatabaseStatistice()
+//        coreDataService.printDatabaseStatistice()
 
 //        coreDataService.enableObservers() // Не включаю обсерверы, чтобы не мусорить в консоль
 
