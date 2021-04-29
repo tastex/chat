@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A7F89A0C4B26DA3BBDC95A49 /* Pods_Chat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01E348AEB041AD2455E9E904 /* Pods_Chat.framework */; };
+		BC066710263B4EC9001A1235 /* TouchTinkoffAnimationWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC06670F263B4EC9001A1235 /* TouchTinkoffAnimationWindow.swift */; };
 		BC1015DE2601B4EB006F63AC /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1015DD2601B4EB006F63AC /* ProfileViewController.swift */; };
 		BC285E0725F02A84008AFE06 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC285E0525F02A84008AFE06 /* MessageCell.swift */; };
 		BC285E0825F02A84008AFE06 /* MessageCellIncoming.xib in Resources */ = {isa = PBXBuildFile; fileRef = BC285E0625F02A84008AFE06 /* MessageCellIncoming.xib */; };
@@ -54,6 +55,7 @@
 		01E348AEB041AD2455E9E904 /* Pods_Chat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Chat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		63EBE8C4CF755891403D395D /* Pods-Chat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chat.release.xcconfig"; path = "Target Support Files/Pods-Chat/Pods-Chat.release.xcconfig"; sourceTree = "<group>"; };
 		7DC51D44D6F851C84511C1EF /* Pods-Chat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chat.debug.xcconfig"; path = "Target Support Files/Pods-Chat/Pods-Chat.debug.xcconfig"; sourceTree = "<group>"; };
+		BC06670F263B4EC9001A1235 /* TouchTinkoffAnimationWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchTinkoffAnimationWindow.swift; sourceTree = "<group>"; };
 		BC1015DD2601B4EB006F63AC /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		BC285E0525F02A84008AFE06 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		BC285E0625F02A84008AFE06 /* MessageCellIncoming.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageCellIncoming.xib; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 				BC36916C261F861F00E613C2 /* UIKitExtensions.swift */,
 				BCD2F6562628FF7E0036329C /* FoundationExtensions.swift */,
 				BC3DF47125DDADD3004A8F91 /* AppDelegate.swift */,
+				BC06670F263B4EC9001A1235 /* TouchTinkoffAnimationWindow.swift */,
 				BC3DF47A25DDADD4004A8F91 /* Assets.xcassets */,
 				BC3DF47C25DDADD4004A8F91 /* LaunchScreen.storyboard */,
 				BC3DF47F25DDADD4004A8F91 /* Info.plist */,
@@ -537,6 +540,7 @@
 				BCF7003A25EBEFDE00707D65 /* UserProfile.swift in Sources */,
 				BC369164261D76C600E613C2 /* DataController.swift in Sources */,
 				BC77955025F80D0300914386 /* ThemesViewController.swift in Sources */,
+				BC066710263B4EC9001A1235 /* TouchTinkoffAnimationWindow.swift in Sources */,
 				BC77955A25F8364D00914386 /* ThemeAppearanceView.swift in Sources */,
 				BCC0976C25F007AC00C63BF7 /* ConversationCell.swift in Sources */,
 				BC885F8B262E965A00912470 /* ImagesCollectionViewController.swift in Sources */,
