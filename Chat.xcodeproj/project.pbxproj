@@ -38,6 +38,8 @@
 		BC885F90262E9D0700912470 /* Images.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC885F8F262E9D0700912470 /* Images.storyboard */; };
 		BC8BB0C626441E4F00EAC6AA /* ChatNetworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BB0C526441E4F00EAC6AA /* ChatNetworkTests.swift */; };
 		BC8BB0D12644224E00EAC6AA /* NetworkServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BB0D02644224E00EAC6AA /* NetworkServiceMock.swift */; };
+		BC8BB0DF2644A41000EAC6AA /* ChatCoreDataTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BB0DE2644A41000EAC6AA /* ChatCoreDataTest.swift */; };
+		BC8BB0E72644AA5D00EAC6AA /* CoreDataServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC8BB0E62644AA5D00EAC6AA /* CoreDataServiceMock.swift */; };
 		BC92234D26126A2B00B54A2E /* ObjectExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC92234C26126A2B00B54A2E /* ObjectExtensions.swift */; };
 		BC92235026126A6300B54A2E /* FirestoreStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC92234F26126A6300B54A2E /* FirestoreStack.swift */; };
 		BCC0974325EEC0DC00C63BF7 /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCC0974225EEC0DC00C63BF7 /* ConversationViewController.swift */; };
@@ -110,6 +112,8 @@
 		BC8BB0C526441E4F00EAC6AA /* ChatNetworkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatNetworkTests.swift; sourceTree = "<group>"; };
 		BC8BB0C726441E4F00EAC6AA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BC8BB0D02644224E00EAC6AA /* NetworkServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceMock.swift; sourceTree = "<group>"; };
+		BC8BB0DE2644A41000EAC6AA /* ChatCoreDataTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCoreDataTest.swift; sourceTree = "<group>"; };
+		BC8BB0E62644AA5D00EAC6AA /* CoreDataServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataServiceMock.swift; sourceTree = "<group>"; };
 		BC92234C26126A2B00B54A2E /* ObjectExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectExtensions.swift; sourceTree = "<group>"; };
 		BC92234F26126A6300B54A2E /* FirestoreStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreStack.swift; sourceTree = "<group>"; };
 		BCC0974225EEC0DC00C63BF7 /* ConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewController.swift; sourceTree = "<group>"; };
@@ -292,6 +296,8 @@
 			children = (
 				BC8BB0C526441E4F00EAC6AA /* ChatNetworkTests.swift */,
 				BC8BB0D02644224E00EAC6AA /* NetworkServiceMock.swift */,
+				BC8BB0DE2644A41000EAC6AA /* ChatCoreDataTest.swift */,
+				BC8BB0E62644AA5D00EAC6AA /* CoreDataServiceMock.swift */,
 				BC8BB0C726441E4F00EAC6AA /* Info.plist */,
 			);
 			path = ChatTests;
@@ -701,7 +707,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BC8BB0DF2644A41000EAC6AA /* ChatCoreDataTest.swift in Sources */,
 				BC8BB0D12644224E00EAC6AA /* NetworkServiceMock.swift in Sources */,
+				BC8BB0E72644AA5D00EAC6AA /* CoreDataServiceMock.swift in Sources */,
 				BC8BB0C626441E4F00EAC6AA /* ChatNetworkTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
