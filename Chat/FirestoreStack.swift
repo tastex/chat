@@ -34,14 +34,23 @@ class FirestoreStack {
         }
     }
 
-    func listenForNewContent<Item: FirestoreItem>(closure: @escaping ([Item]) -> Void) {
+    func listenForContentChanges<Item: FirestoreItem>(closure: @escaping (_ items: [Item], _ removed: [Item]) -> Void) {
         listener = reference.addSnapshotListener { snapshot, _ in
-            guard let documents = snapshot?.documents else { return }
-
-            let items = documents.compactMap { documentSnapshot -> Item? in
-                return Item(with: documentSnapshot)
+            guard let documentChanges = snapshot?.documentChanges else { return }
+            documentChanges.forEach { change in
+                guard let item = Item(with: change.document) else { return }
+                var items = [Item]()
+                var removed = [Item]()
+                switch change.type {
+                case .added:
+                    items.append(item)
+                case .modified:
+                    items.append(item)
+                case .removed:
+                    removed.append(item)
+                }
+                closure(items, removed)
             }
-            closure(items)
         }
     }
 
@@ -59,6 +68,15 @@ extension FirestoreStack {
             return nil
         }
     }
+
+    func removeChannel(id: String, completion: ((Error?) -> Void)?) {
+        switch collection {
+        case .channels:
+            return reference.document(id).delete(completion: completion)
+        default:
+            return
+        }
+    }
 }
 
 extension FirestoreStack {
@@ -69,6 +87,15 @@ extension FirestoreStack {
                                          "created": Timestamp(date: created ?? Date()),
                                          "senderId": senderId,
                                          "senderName": senderName])
+        default:
+            return
+        }
+    }
+
+    func removeMessage(id: String, completion: ((Error?) -> Void)?) {
+        switch collection {
+        case .messages:
+            return reference.document(id).delete(completion: completion)
         default:
             return
         }

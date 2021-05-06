@@ -83,6 +83,11 @@ extension CoreDataStack {
     private func performSave(in context: NSManagedObjectContext) {
         context.performAndWait {
             do {
+                try context.obtainPermanentIDs(for: Array(context.registeredObjects))
+            } catch {
+                fatalError("Unable to get permanent ids for managed objects")
+            }
+            do {
                 try context.save()
             } catch {
                 assertionFailure(error.localizedDescription)
