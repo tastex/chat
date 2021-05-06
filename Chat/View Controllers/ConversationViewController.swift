@@ -9,6 +9,7 @@ import UIKit
 import Firebase
 
 struct Message {
+    let identifier: String
     let content: String
     let created: Date
     let senderId: String
@@ -17,10 +18,10 @@ struct Message {
 
 class ConversationViewController: UIViewController {
 
-    var reference: CollectionReference?
+    var channel: Channel?
+    var store: FirestoreStack?
+    var coreDataStack: CoreDataStack?
     var dismissHandler: (() -> Void)?
-
-    private var listener: ListenerRegistration?
 
     private var messages = [Message]()
     private let cellIdentifierIncoming = "MessageCellIncoming"
@@ -35,6 +36,7 @@ class ConversationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        title = channel?.name
         navigationItem.largeTitleDisplayMode = .never
 
         tableView.allowsSelection = false
@@ -43,7 +45,22 @@ class ConversationViewController: UIViewController {
 
         tableView.dataSource = self
 
-        listenForNewContent()
+        var scrollToBottomAnimated = false
+        store?.listenForNewContent { (messages: [Message]) in
+            let queue = DispatchQueue(label: "UpdatingMessagesContentQueue", qos: .userInitiated)
+            queue.async {
+                self.messages = messages.sorted { $0.created < $1.created }
+
+                DispatchQueue.main.async {
+                    self.title = "\(self.channel?.name ?? "") \(messages.count)"
+                    self.tableView.reloadData()
+                    self.scrollToBottom(animated: scrollToBottomAnimated)
+                    scrollToBottomAnimated = true
+                }
+
+                self.performCoreDataSave(messages: messages)
+            }
+        }
 
         messageInputView.text = ""
         messageInputView.delegate = self
@@ -62,7 +79,7 @@ class ConversationViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         stopAvoidingKeyboard()
-        listener?.remove()
+        store?.stopListening()
         dismissHandler?()
     }
 
@@ -71,49 +88,31 @@ class ConversationViewController: UIViewController {
            !message.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
            !isMessageInputViewPlaceholderVisible,
            let senderName = UserProfile.defaultProfile.name {
-            reference?.addDocument(data: ["content": message,
-                                          "created": Timestamp(date: Date()),
-                                          "senderId": UserProfile.defaultProfile.id,
-                                          "senderName": senderName])
+            store?.addMessage(message, senderName: senderName, senderId: UserProfile.defaultProfile.id)
             messageInputView.text = ""
         }
     }
 
-    func listenForNewContent() {
-
-        var scrollToBottomAnimated = false
-
-        listener = reference?.addSnapshotListener { [weak self]  snapshot, _ in
-            guard let documents = snapshot?.documents else { return }
-
-            self?.messages = documents.compactMap { documentSnapshot -> Message? in
-                let data = documentSnapshot.data()
-                if let content = data["content"] as? String,
-                   let created = data["created"] as? Timestamp,
-                   let senderId = data["senderId"] as? String,
-                   let senderName = data["senderName"] as? String {
-
-                    return Message(content: content, created: created.dateValue(), senderId: senderId, senderName: senderName)
-                }
-                return nil
-            }
-            .sorted { $0.created < $1.created }
-
-            DispatchQueue.main.async {
-                guard let self = self else { return }
-                self.tableView.reloadData()
-                self.scrollToBottom(animated: scrollToBottomAnimated)
-                scrollToBottomAnimated = true
-            }
-        }
-    }
-
     func scrollToBottom(animated: Bool) {
-
         let numberOfSections = tableView.numberOfSections
         let numberOfRows = tableView.numberOfRows(inSection: numberOfSections - 1)
         if numberOfRows > 0 {
             tableView.scrollToRow(at: IndexPath(row: numberOfRows - 1, section: (numberOfSections - 1)), at: .bottom, animated: animated)
+        }
+    }
+}
+
+extension ConversationViewController {
+    func performCoreDataSave(messages: [Message]) {
+        guard let channel = channel,
+              let coreDataStack = coreDataStack else { return }
+
+        coreDataStack.performSave { context in
+            let channelDb = ChannelDb(channel: channel, in: context)
+            messages.forEach { message in
+                let messageDb = MessageDb(message: message, in: context)
+                channelDb.addToMessages(messageDb)
+            }
         }
     }
 }

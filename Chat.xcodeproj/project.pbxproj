@@ -16,11 +16,15 @@
 		BC3DF47925DDADD3004A8F91 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC3DF47725DDADD3004A8F91 /* Main.storyboard */; };
 		BC3DF47B25DDADD4004A8F91 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BC3DF47A25DDADD4004A8F91 /* Assets.xcassets */; };
 		BC3DF47E25DDADD4004A8F91 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC3DF47C25DDADD4004A8F91 /* LaunchScreen.storyboard */; };
+		BC556C672610DE660094C23F /* Chat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BC556C652610DE660094C23F /* Chat.xcdatamodeld */; };
+		BC556C6E2610EC890094C23F /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC556C6D2610EC890094C23F /* CoreDataStack.swift */; };
 		BC5F6BE126093AC400241D59 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BC5F6BE026093AC400241D59 /* GoogleService-Info.plist */; };
 		BC6B424F25F96D1A0007EC34 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6B424E25F96D1A0007EC34 /* Theme.swift */; };
 		BC77955025F80D0300914386 /* ThemesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC77954F25F80D0300914386 /* ThemesViewController.swift */; };
 		BC77955725F82AC200914386 /* ThemeAppearanceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BC77955625F82AC200914386 /* ThemeAppearanceView.xib */; };
 		BC77955A25F8364D00914386 /* ThemeAppearanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC77955925F8364D00914386 /* ThemeAppearanceView.swift */; };
+		BC92234D26126A2B00B54A2E /* ObjectExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC92234C26126A2B00B54A2E /* ObjectExtensions.swift */; };
+		BC92235026126A6300B54A2E /* FirestoreStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC92234F26126A6300B54A2E /* FirestoreStack.swift */; };
 		BCC0974325EEC0DC00C63BF7 /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCC0974225EEC0DC00C63BF7 /* ConversationViewController.swift */; };
 		BCC0976C25F007AC00C63BF7 /* ConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCC0976A25F007AC00C63BF7 /* ConversationCell.swift */; };
 		BCC0976D25F007AC00C63BF7 /* ConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BCC0976B25F007AC00C63BF7 /* ConversationCell.xib */; };
@@ -43,11 +47,15 @@
 		BC3DF47A25DDADD4004A8F91 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BC3DF47D25DDADD4004A8F91 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BC3DF47F25DDADD4004A8F91 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BC556C662610DE660094C23F /* Chat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Chat.xcdatamodel; sourceTree = "<group>"; };
+		BC556C6D2610EC890094C23F /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		BC5F6BE026093AC400241D59 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BC6B424E25F96D1A0007EC34 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		BC77954F25F80D0300914386 /* ThemesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemesViewController.swift; sourceTree = "<group>"; };
 		BC77955625F82AC200914386 /* ThemeAppearanceView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThemeAppearanceView.xib; sourceTree = "<group>"; };
 		BC77955925F8364D00914386 /* ThemeAppearanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeAppearanceView.swift; sourceTree = "<group>"; };
+		BC92234C26126A2B00B54A2E /* ObjectExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectExtensions.swift; sourceTree = "<group>"; };
+		BC92234F26126A6300B54A2E /* FirestoreStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreStack.swift; sourceTree = "<group>"; };
 		BCC0974225EEC0DC00C63BF7 /* ConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewController.swift; sourceTree = "<group>"; };
 		BCC0976A25F007AC00C63BF7 /* ConversationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCell.swift; sourceTree = "<group>"; };
 		BCC0976B25F007AC00C63BF7 /* ConversationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationCell.xib; sourceTree = "<group>"; };
@@ -135,7 +143,9 @@
 			children = (
 				BC0EDC6E25F9533F001EBB17 /* View Controllers */,
 				BC0EDC6D25F952F3001EBB17 /* Views */,
+				BC556C692610DE6B0094C23F /* Core Data */,
 				BC3DF47125DDADD3004A8F91 /* AppDelegate.swift */,
+				BC92234F26126A6300B54A2E /* FirestoreStack.swift */,
 				BCF7003925EBEFDE00707D65 /* UserProfile.swift */,
 				BC6B424E25F96D1A0007EC34 /* Theme.swift */,
 				BC3DF47A25DDADD4004A8F91 /* Assets.xcassets */,
@@ -144,6 +154,16 @@
 				BC5F6BE026093AC400241D59 /* GoogleService-Info.plist */,
 			);
 			path = Chat;
+			sourceTree = "<group>";
+		};
+		BC556C692610DE6B0094C23F /* Core Data */ = {
+			isa = PBXGroup;
+			children = (
+				BC556C652610DE660094C23F /* Chat.xcdatamodeld */,
+				BC556C6D2610EC890094C23F /* CoreDataStack.swift */,
+				BC92234C26126A2B00B54A2E /* ObjectExtensions.swift */,
+			);
+			path = "Core Data";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -289,9 +309,13 @@
 				BCC0976C25F007AC00C63BF7 /* ConversationCell.swift in Sources */,
 				BCF13CAE2603FA8700F866FC /* ProfileLogoView.swift in Sources */,
 				BCC0974325EEC0DC00C63BF7 /* ConversationViewController.swift in Sources */,
+				BC556C6E2610EC890094C23F /* CoreDataStack.swift in Sources */,
+				BC92235026126A6300B54A2E /* FirestoreStack.swift in Sources */,
 				BC1015DE2601B4EB006F63AC /* ProfileViewController.swift in Sources */,
+				BC92234D26126A2B00B54A2E /* ObjectExtensions.swift in Sources */,
 				BC3DF47225DDADD3004A8F91 /* AppDelegate.swift in Sources */,
 				BC6B424F25F96D1A0007EC34 /* Theme.swift in Sources */,
+				BC556C672610DE660094C23F /* Chat.xcdatamodeld in Sources */,
 				BCF7003725EB9BF900707D65 /* ConversationsListViewController.swift in Sources */,
 				BC285E0725F02A84008AFE06 /* MessageCell.swift in Sources */,
 			);
@@ -450,7 +474,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ru.tinkoff.TinkoffChat;
+				PRODUCT_BUNDLE_IDENTIFIER = "ru.vladimir-bolotov.TinkoffChat";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -473,7 +497,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ru.tinkoff.TinkoffChat;
+				PRODUCT_BUNDLE_IDENTIFIER = "ru.vladimir-bolotov.TinkoffChat";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -503,6 +527,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		BC556C652610DE660094C23F /* Chat.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				BC556C662610DE660094C23F /* Chat.xcdatamodel */,
+			);
+			currentVersion = BC556C662610DE660094C23F /* Chat.xcdatamodel */;
+			path = Chat.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = BC3DF46625DDADD3004A8F91 /* Project object */;
 }
