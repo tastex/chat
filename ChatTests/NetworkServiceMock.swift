@@ -21,19 +21,3 @@ import Foundation
         }
     }
 }
-
-class RequestMock: RequestProtocol {
-    var urlRequest: URLRequest?
-}
-
-struct ParserMock: ParserProtocol {
-    typealias Model = [ImagesDataMock]
-    func parse(data: Data) -> Model? {
-        return nil
-    }
-}
-
-struct ImagesDataMock {
-    var previewURL: String
-    var imageURL: String
-}
