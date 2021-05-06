@@ -33,6 +33,9 @@
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" text="Marina ScrollView" translatesAutoresizingMaskIntoConstraints="NO" id="NUG-AV-FSs">
                                                 <rect key="frame" x="82" y="275" width="211" height="45"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="NameTextView">
+                                                    <accessibilityTraits key="traits" none="YES"/>
+                                                </accessibility>
                                                 <color key="textColor" systemColor="labelColor"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="words" textContentType="name"/>
@@ -40,6 +43,7 @@
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" text="UX/UI designer, web-designer Moscow, Russia" translatesAutoresizingMaskIntoConstraints="NO" id="w9e-ei-Pqt">
                                                 <rect key="frame" x="67.5" y="338" width="240" height="70"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="BioTextView"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="70" id="sVS-Vb-axg"/>
                                                 </constraints>
