@@ -16,6 +16,6 @@ end
 
 desc "Installing dependencies, clean build and running tests"
 lane :build_and_test do
-  prepare_build_for_testing
+  prepare_build
   run_tests_on_build
 end
