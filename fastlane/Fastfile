@@ -1,0 +1,21 @@
+desc "Installing dependencies, clean build"
+lane :prepare_build do |options|
+  cocoapods
+  scan(
+    clean: true,
+    build_for_testing: true
+  )
+end
+
+desc "Running tests and skip build"
+lane :run_tests_on_build do |options|
+  scan(
+    skip_build: true
+  )
+end
+
+desc "Installing dependencies, clean build and running tests"
+lane :build_and_test do
+  prepare_build_for_testing
+  run_tests
+end
