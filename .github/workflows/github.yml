@@ -17,4 +17,4 @@ jobs:
           bundler-cache: true
       - name: Build and run tests
         run:
-          echo Test Build and run tests
+          bundle exec fastlane build_and_test
