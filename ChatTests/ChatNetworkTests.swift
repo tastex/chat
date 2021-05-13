@@ -12,7 +12,6 @@ class ChatNetworkTests: XCTestCase {
 
     func testSendNetworkRequest() throws {
         // Arrange
-        let testURLString = "https://tinkoff.ru"
         let networkServiceMock = NetworkServiceMock()
 
         // Act
@@ -20,10 +19,6 @@ class ChatNetworkTests: XCTestCase {
         images.getImages { _ in }
 
         // Assert
-        if let testURL = URL(string: testURLString) {
-            XCTAssertNotEqual(networkServiceMock.requestURLs, [testURL])
-        }
-
         let spaceImageConfig = RequestsFactory.PixabayRequests.spaceImagesConfig()
         XCTAssertEqual(networkServiceMock.requestURLs,
                        [spaceImageConfig.request.urlRequest?.url])
