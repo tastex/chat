@@ -1,6 +1,10 @@
 desc "Installing dependencies, clean build"
 lane :prepare_build do |options|
   cocoapods
+  swiftlint(
+    mode: :lint,      
+    executable: "./Pods/SwiftLint/swiftlint"
+  )
   scan(
     clean: true,
     build_for_testing: true
