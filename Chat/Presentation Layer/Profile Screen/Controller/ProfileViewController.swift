@@ -185,6 +185,8 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
         nameTextView.becomeFirstResponder()
         bioTextView.isEditable = true
         updateButtonVisibility()
+
+        animateLayer(cancelButton.layer)
     }
     
     @IBAction func cancelButtonTap(_ sender: Any) {
@@ -195,6 +197,9 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     @IBAction func saveGCDButtonTap(_ sender: Any) {
+        if animationIsActive(from: cancelButton.layer) {
+            stopAnimations(from: cancelButton.layer)
+        }
         activityIndicator.startAnimating()
         isSavingData = true
         saveData()
@@ -203,6 +208,9 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     @IBAction func saveOperationsButtonTap(_ sender: Any) {
+        if animationIsActive(from: cancelButton.layer) {
+            stopAnimations(from: cancelButton.layer)
+        }
         activityIndicator.startAnimating()
         isSavingData = true
         saveData()

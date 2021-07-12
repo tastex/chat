@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let navigationVC = UINavigationController(rootViewController: conversationsListVC)
         navigationVC.navigationBar.prefersLargeTitles = true
 
-        self.window = UIWindow(frame: UIScreen.main.bounds)
+        self.window = TouchTinkoffAnimationWindow(frame: UIScreen.main.bounds)
         self.window?.rootViewController = navigationVC
         self.window?.makeKeyAndVisible()
 

@@ -53,22 +53,8 @@
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="J2F-Ah-mom" userLabel="Bottom Buttons Stack">
                                                 <rect key="frame" x="23.5" y="461" width="328" height="166"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vMI-13-YuE">
-                                                        <rect key="frame" x="0.0" y="0.0" width="328" height="50"/>
-                                                        <color key="backgroundColor" systemColor="systemGray5Color"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="50" id="khH-Jh-UEb"/>
-                                                        </constraints>
-                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="19"/>
-                                                        <state key="normal" title="Cancel">
-                                                            <color key="titleColor" systemColor="systemBlueColor"/>
-                                                        </state>
-                                                        <connections>
-                                                            <action selector="cancelButtonTap:" destination="88U-hB-YRD" eventType="touchUpInside" id="EgW-s9-754"/>
-                                                        </connections>
-                                                    </button>
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="xXE-jD-Ozg">
-                                                        <rect key="frame" x="0.0" y="58" width="328" height="50"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="328" height="50"/>
                                                         <subviews>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dAP-RS-3ZL">
                                                                 <rect key="frame" x="0.0" y="0.0" width="160" height="50"/>
@@ -101,6 +87,20 @@
                                                             </button>
                                                         </subviews>
                                                     </stackView>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vMI-13-YuE">
+                                                        <rect key="frame" x="0.0" y="58" width="328" height="50"/>
+                                                        <color key="backgroundColor" systemColor="systemGray5Color"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="50" id="khH-Jh-UEb"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="19"/>
+                                                        <state key="normal" title="Cancel">
+                                                            <color key="titleColor" systemColor="systemBlueColor"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="cancelButtonTap:" destination="88U-hB-YRD" eventType="touchUpInside" id="EgW-s9-754"/>
+                                                        </connections>
+                                                    </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hQ6-LA-igB">
                                                         <rect key="frame" x="0.0" y="116" width="328" height="50"/>
                                                         <color key="backgroundColor" systemColor="systemGray5Color"/>
