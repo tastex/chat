@@ -60,6 +60,8 @@ class ConversationsListViewController: UITableViewController {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(profileButtonTap(_:)))
         profileView.addGestureRecognizer(tapGestureRecognizer)
         let profileBarButtonItem = UIBarButtonItem(customView: profileView)
+        profileView.isAccessibilityElement = true
+        profileView.accessibilityIdentifier = "ProfileBarButtonItem"
 
         let newChannelButton = UIBarButtonItem(image: UIImage(named: "square.and.pencil"),
                                                style: .plain,
