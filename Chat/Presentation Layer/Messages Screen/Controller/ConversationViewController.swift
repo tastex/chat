@@ -8,39 +8,44 @@
 import UIKit
 import Firebase
 
-struct Message {
-    let identifier: String
-    let content: String
-    let created: Date
-    let senderId: String
-    let senderName: String
+extension ConversationViewController {
+    fileprivate static var storyboardName: String { "Conversation" }
+    fileprivate static var storyboardIdentifier: String { String(describing: ConversationViewController.self) }
+
+    static func instantiate(channel: Channel, coreDataService: CoreDataServiceProtocol?) -> ConversationViewController? {
+        guard let controller = UIStoryboard(name: storyboardName, bundle: .main)
+                .instantiateViewController(withIdentifier: storyboardIdentifier) as? ConversationViewController else { return nil }
+        controller.channel = channel
+        controller.coreDataService = coreDataService
+        return controller
+    }
 }
 
 class ConversationViewController: UIViewController {
 
-    var channel: Channel?
-    var coreDataStack: CoreDataStack?
+    var dismissHandler: (() -> Void)?
 
-    lazy var store: FirestoreStack? = {
+    private var channel: Channel?
+    private var coreDataService: CoreDataServiceProtocol?
+
+    private lazy var store: FirestoreStack? = {
         guard let channel = channel else { return nil }
         return FirestoreStack(collection: .messages(channelId: channel.identifier))
     }()
-    lazy var dataController: DataController? = {
+    private lazy var dataController: DataController? = {
         guard let channel = channel,
-              let coreDataStack = coreDataStack else { return nil }
-        return DataController(for: .messages(channelId: channel.identifier), tableView: tableView, in: coreDataStack.mainContext)
+              let coreDataService = coreDataService else { return nil }
+        return DataController(for: .messages(channelId: channel.identifier), tableView: tableView, in: coreDataService.mainContext)
     }()
-
-    var dismissHandler: (() -> Void)?
 
     private let cellIdentifierIncoming = "MessageCellIncoming"
     private let cellIdentifierOutgoing = "MessageCellOutgoing"
 
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var sendButton: UIButton!
-    @IBOutlet weak var messageInputView: UITextView!
-    @IBOutlet weak var messageInputBackgroundView: UIView!
-    @IBOutlet weak var messageInputContainer: UIView!
+    @IBOutlet private weak var tableView: UITableView!
+    @IBOutlet private weak var sendButton: UIButton!
+    @IBOutlet private weak var messageInputView: UITextView!
+    @IBOutlet private weak var messageInputBackgroundView: UIView!
+    @IBOutlet private weak var messageInputContainer: UIView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -112,25 +117,13 @@ class ConversationViewController: UIViewController {
 extension ConversationViewController {
     func performCoreDataSave(messages: [Message], deleted: [Message]) {
         guard let channel = channel,
-              let coreDataStack = coreDataStack,
+              let coreDataService = coreDataService,
               let dataController = dataController else { return }
 
-        coreDataStack.performSave { context in
-            let channelDb = ChannelDb(channel: channel, in: context)
-            messages.forEach { message in
-                if dataController.getMessageDb(message: message, context: context) == nil {
-                    let messageDb = MessageDb(message: message, in: context)
-                    channelDb.addToMessages(messageDb)
-                }
-            }
-
-            deleted.forEach { message in
-                if let messageDb = dataController.getMessageDb(message: message, context: context) {
-                    channelDb.removeFromMessages(messageDb)
-                    context.delete(messageDb)
-                }
-            }
-        }
+        coreDataService.performSave(dataController: dataController,
+                                    channel: channel,
+                                    messages: messages,
+                                    deleted: deleted)
     }
 }
 
@@ -162,18 +155,6 @@ extension ConversationViewController: UITableViewDataSource {
 
         cell.configure(with: .init(text: message.content, senderName: senderName))
         return cell
-    }
-}
-
-extension DateFormatter {
-    static func stringDescribingMessage(date: Date?) -> String {
-        guard let date = date else { return "Sometime" }
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd MMM HH:mm"
-        if Calendar.current.isDateInToday(date) {
-            formatter.dateFormat = "HH:mm"
-        }
-        return formatter.string(from: date)
     }
 }
 

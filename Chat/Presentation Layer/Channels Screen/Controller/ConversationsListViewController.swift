@@ -9,34 +9,31 @@ import UIKit
 import Firebase
 import CoreData
 
-struct Channel {
-    let identifier: String
-    let name: String
-    let lastMessage: String?
-    let lastActivity: Date?
-
-    init(identifier: String, name: String, lastMessage: String?, lastActivity: Date?) {
-        self.identifier = identifier
-        self.name = name
-        self.lastMessage = lastMessage
-        self.lastActivity = lastActivity
+extension ConversationsListViewController {
+    static func instantiate(coreDataService: CoreDataServiceProtocol?) -> ConversationsListViewController? {
+        guard let coreDataService = coreDataService else { return nil }
+        return ConversationsListViewController(style: .grouped, coreDataService: coreDataService)
     }
 }
 
 class ConversationsListViewController: UITableViewController {
 
-    let coreDataStack: CoreDataStack
+    let coreDataService: CoreDataServiceProtocol
     let themeController = ThemeController()
 
     private lazy var store = FirestoreStack(collection: .channels)
     private lazy var dataController: DataController = {
-        return DataController(for: .channels, tableView: tableView, in: coreDataStack.mainContext)
+        return DataController(for: .channels, tableView: tableView, in: coreDataService.mainContext)
+    }()
+
+    private lazy var profileView: ProfileLogoView = {
+        ProfileLogoView(frame: CGRect(origin: .zero, size: CGSize(width: 40, height: 40)))
     }()
 
     private let cellIdentifier = String(describing: ConversationCell.self)
 
-    init(style: UITableView.Style, coreDataStack: CoreDataStack) {
-        self.coreDataStack = coreDataStack
+    init(style: UITableView.Style, coreDataService: CoreDataServiceProtocol) {
+        self.coreDataService = coreDataService
         super.init(style: style)
 
         title = "Channels"
@@ -60,7 +57,6 @@ class ConversationsListViewController: UITableViewController {
 
         store.listenForContentChanges(closure: listenerCompletion)
 
-        let profileView = ProfileLogoView(frame: CGRect(origin: .zero, size: CGSize(width: 40, height: 40)))
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(profileButtonTap(_:)))
         profileView.addGestureRecognizer(tapGestureRecognizer)
         let profileBarButtonItem = UIBarButtonItem(customView: profileView)
@@ -81,7 +77,7 @@ class ConversationsListViewController: UITableViewController {
         super.viewDidDisappear(animated)
         store.stopListening()
     }
-    
+
     @objc
     func newChannelButtonTap() {
         let alert = UIAlertController(title: "Create New Channel", message: nil, preferredStyle: .alert)
@@ -99,10 +95,10 @@ class ConversationsListViewController: UITableViewController {
     
     @objc
     func profileButtonTap(_ sender: UITapGestureRecognizer) {
-        guard let profileVC = UIStoryboard(name: "Main", bundle: .main)
-                .instantiateViewController(withIdentifier: String(describing: ProfileViewController.self)) as? ProfileViewController else { return }
-        
-        profileVC.setProfile(profile: UserProfile.defaultProfile)
+        guard let profileVC = ProfileViewController.instantiate(profile: UserProfile.defaultProfile) else { return }
+        profileVC.dismissHandler = {
+            self.profileView.configure()
+        }
         let navigationVC = UINavigationController(rootViewController: profileVC)
         navigationVC.navigationBar.prefersLargeTitles = true
         self.navigationController?.present(navigationVC, animated: true, completion: nil)
@@ -110,8 +106,7 @@ class ConversationsListViewController: UITableViewController {
     
     @objc
     func settingsButtonTap() {
-        guard let themesVC = UIStoryboard(name: "Main", bundle: .main)
-                .instantiateViewController(withIdentifier: String(describing: ThemesViewController.self)) as? ThemesViewController else { return }
+        guard let themesVC = ThemesViewController.instantiate() else { return }
         themesVC.themePickerDelegate = themeController
         self.navigationController?.pushViewController(themesVC, animated: true)
     }
@@ -119,19 +114,7 @@ class ConversationsListViewController: UITableViewController {
 
 extension ConversationsListViewController {
     func performCoreDataSave(channels: [Channel], deleted: [Channel]) {
-        self.coreDataStack.performSave { context in
-            channels.forEach { channel in
-                let channelDb = self.dataController.getChannelDb(channel: channel, context: context)
-                if  channelDb == nil {
-                    _ = ChannelDb(channel: channel, in: context)
-                }
-            }
-            deleted.forEach { channel in
-                if let channelDb = self.dataController.getChannelDb(channel: channel, context: context) {
-                    context.delete(channelDb)
-                }
-            }
-        }
+        coreDataService.performSave(dataController: dataController, channels: channels, deleted: deleted)
     }
 }
 
@@ -186,17 +169,11 @@ extension ConversationsListViewController {
 // MARK: - Navigation
 extension ConversationsListViewController {
     func presentMessages(in channel: Channel) {
-        guard let conversationVC = UIStoryboard(name: "Main", bundle: .main)
-                .instantiateViewController(withIdentifier:
-                                            String(describing: ConversationViewController.self))
-                as? ConversationViewController else {
+        guard let conversationVC = ConversationViewController.instantiate(channel: channel, coreDataService: coreDataService) else {
             return
         }
         store.stopListening()
         dataController.stopTrackChanges()
-
-        conversationVC.channel = channel
-        conversationVC.coreDataStack = coreDataStack
         conversationVC.dismissHandler = { [weak self] in
             guard let self = self else { return }
             self.store.listenForContentChanges(closure: self.listenerCompletion)

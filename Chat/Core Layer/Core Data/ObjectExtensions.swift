@@ -17,6 +17,12 @@ extension ChannelDb {
         self.lastActivity = channel.lastActivity
     }
 
+    func update(with channel: Channel) {
+        name = channel.name
+        lastActivity = channel.lastActivity
+        lastMessage = channel.lastMessage
+    }
+
     var about: String {
         let channel =
             """
@@ -48,6 +54,13 @@ extension MessageDb {
         self.created = message.created
         self.senderId = message.senderId
         self.senderName = message.senderName
+    }
+
+    func update(with message: Message) {
+        content = message.content
+        created = message.created
+        senderId = message.senderId
+        senderName = message.senderName
     }
 
     var about: String {

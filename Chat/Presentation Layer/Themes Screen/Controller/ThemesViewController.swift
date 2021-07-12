@@ -7,6 +7,17 @@
 
 import UIKit
 
+extension ThemesViewController {
+    fileprivate static var storyboardName: String { "Themes" }
+    fileprivate static var storyboardIdentifier: String { String(describing: ThemesViewController.self) }
+
+    static func instantiate() -> ThemesViewController? {
+        guard let controller = UIStoryboard(name: storyboardName, bundle: .main)
+                .instantiateViewController(withIdentifier: storyboardIdentifier) as? ThemesViewController else { return nil }
+        return controller
+    }
+}
+
 class ThemesViewController: UIViewController {
 
     @IBOutlet weak var topThemeContainer: UIView!
