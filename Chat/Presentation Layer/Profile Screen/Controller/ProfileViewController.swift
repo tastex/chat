@@ -57,9 +57,12 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
         guard let draft = draft else {
             return
         }
-        nameTextView?.text = draft.name
-        bioTextView?.text = draft.bio
-        logoContainerView?.configure(profileData: draft)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.nameTextView?.text = draft.name
+            self.bioTextView?.text = draft.bio
+            self.logoContainerView?.configure(profileData: draft)
+        }
     }
 
     func saveData() {
@@ -132,8 +135,6 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     
     @objc
     func logoTap(_ sender: Any) {
-        guard nameTextView.isEditable else { return }
-
         let alert = UIAlertController(title: nil, message: "Change Profile Logo", preferredStyle: .actionSheet)
         alert.pruneNegativeWidthConstraints()
         alert.addAction(.init(title: "Chose Photo", style: .default) { [self]_ in
@@ -144,6 +145,9 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
                 showImagePicker(sourceType: .camera)
             })
         }
+        alert.addAction(.init(title: "Download Image", style: .default) { [self]_ in
+            getImageFromNetwork()
+        })
         if draft?.image != nil {
             alert.addAction(.init(title: "Remove Photo", style: .destructive) { [self]_ in
                 draft?.image = nil
@@ -195,6 +199,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
         isSavingData = true
         saveData()
         print(#function)
+        // TODO: - Complete saving with GCD
     }
     
     @IBAction func saveOperationsButtonTap(_ sender: Any) {
@@ -202,12 +207,27 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
         isSavingData = true
         saveData()
         print(#function)
+        // TODO: - Complete saving with Operations
+    }
+}
+
+extension ProfileViewController {
+    func getImageFromNetwork() {
+        guard let imagesVC = ImagesCollectionViewController.instantiate() else { return }
+        imagesVC.dismissHandler = { image in
+            if let image = image {
+                self.draft?.image = image
+                self.configure()
+            }
+        }
+        self.navigationController?.present(imagesVC, animated: true, completion: nil)
     }
 }
 
 extension ProfileViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        saveData()
         dismissHandler?()
     }
     override func viewDidDisappear(_ animated: Bool) {

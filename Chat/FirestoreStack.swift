@@ -43,13 +43,10 @@ class FirestoreStack {
                 var removed = [Item]()
                 switch change.type {
                 case .added:
-                    print("added - \(item)")
                     items.append(item)
                 case .modified:
-                    print("modified - \(item)")
                     items.append(item)
                 case .removed:
-                    print("removed - \(item)")
                     removed.append(item)
                 }
                 closure(items, removed)

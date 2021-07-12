@@ -20,11 +20,20 @@
 		BC3DF47E25DDADD4004A8F91 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC3DF47C25DDADD4004A8F91 /* LaunchScreen.storyboard */; };
 		BC556C672610DE660094C23F /* Chat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BC556C652610DE660094C23F /* Chat.xcdatamodeld */; };
 		BC556C6E2610EC890094C23F /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC556C6D2610EC890094C23F /* CoreDataStack.swift */; };
+		BC5D0F552630A60300B57032 /* ImagesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC5D0F542630A60300B57032 /* ImagesCollectionViewCell.swift */; };
+		BC5D0F86263222D300B57032 /* RequestSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC5D0F85263222D300B57032 /* RequestSender.swift */; };
+		BC5D0F8A263228C100B57032 /* RequestsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC5D0F89263228C100B57032 /* RequestsFactory.swift */; };
+		BC5D0F8D26322F2E00B57032 /* PixabayParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC5D0F8C26322F2E00B57032 /* PixabayParser.swift */; };
+		BC5D0F912632353600B57032 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC5D0F902632353600B57032 /* NetworkService.swift */; };
+		BC5D0FAA263249E400B57032 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC5D0F582631961D00B57032 /* Images.swift */; };
+		BC5D0FAD263249EA00B57032 /* NetworkImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC5D0F5B26319A7B00B57032 /* NetworkImage.swift */; };
 		BC5F6BE126093AC400241D59 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BC5F6BE026093AC400241D59 /* GoogleService-Info.plist */; };
 		BC6B424F25F96D1A0007EC34 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6B424E25F96D1A0007EC34 /* Theme.swift */; };
 		BC77955025F80D0300914386 /* ThemesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC77954F25F80D0300914386 /* ThemesViewController.swift */; };
 		BC77955725F82AC200914386 /* ThemeAppearanceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BC77955625F82AC200914386 /* ThemeAppearanceView.xib */; };
 		BC77955A25F8364D00914386 /* ThemeAppearanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC77955925F8364D00914386 /* ThemeAppearanceView.swift */; };
+		BC885F8B262E965A00912470 /* ImagesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC885F8A262E965A00912470 /* ImagesCollectionViewController.swift */; };
+		BC885F90262E9D0700912470 /* Images.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC885F8F262E9D0700912470 /* Images.storyboard */; };
 		BC92234D26126A2B00B54A2E /* ObjectExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC92234C26126A2B00B54A2E /* ObjectExtensions.swift */; };
 		BC92235026126A6300B54A2E /* FirestoreStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC92234F26126A6300B54A2E /* FirestoreStack.swift */; };
 		BCC0974325EEC0DC00C63BF7 /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCC0974225EEC0DC00C63BF7 /* ConversationViewController.swift */; };
@@ -59,11 +68,20 @@
 		BC3DF47F25DDADD4004A8F91 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BC556C662610DE660094C23F /* Chat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Chat.xcdatamodel; sourceTree = "<group>"; };
 		BC556C6D2610EC890094C23F /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		BC5D0F542630A60300B57032 /* ImagesCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCollectionViewCell.swift; sourceTree = "<group>"; };
+		BC5D0F582631961D00B57032 /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
+		BC5D0F5B26319A7B00B57032 /* NetworkImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkImage.swift; sourceTree = "<group>"; };
+		BC5D0F85263222D300B57032 /* RequestSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestSender.swift; sourceTree = "<group>"; };
+		BC5D0F89263228C100B57032 /* RequestsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestsFactory.swift; sourceTree = "<group>"; };
+		BC5D0F8C26322F2E00B57032 /* PixabayParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixabayParser.swift; sourceTree = "<group>"; };
+		BC5D0F902632353600B57032 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		BC5F6BE026093AC400241D59 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BC6B424E25F96D1A0007EC34 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		BC77954F25F80D0300914386 /* ThemesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemesViewController.swift; sourceTree = "<group>"; };
 		BC77955625F82AC200914386 /* ThemeAppearanceView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThemeAppearanceView.xib; sourceTree = "<group>"; };
 		BC77955925F8364D00914386 /* ThemeAppearanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeAppearanceView.swift; sourceTree = "<group>"; };
+		BC885F8A262E965A00912470 /* ImagesCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCollectionViewController.swift; sourceTree = "<group>"; };
+		BC885F8F262E9D0700912470 /* Images.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Images.storyboard; sourceTree = "<group>"; };
 		BC92234C26126A2B00B54A2E /* ObjectExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectExtensions.swift; sourceTree = "<group>"; };
 		BC92234F26126A6300B54A2E /* FirestoreStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreStack.swift; sourceTree = "<group>"; };
 		BCC0974225EEC0DC00C63BF7 /* ConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewController.swift; sourceTree = "<group>"; };
@@ -151,6 +169,7 @@
 				BCC9A8D32626250100A54518 /* Presentation Layer */,
 				BCC9A8D42626251300A54518 /* Service Layer */,
 				BCC9A8D2262624F100A54518 /* Core Layer */,
+				BC92234F26126A6300B54A2E /* FirestoreStack.swift */,
 				BC36916C261F861F00E613C2 /* UIKitExtensions.swift */,
 				BCD2F6562628FF7E0036329C /* FoundationExtensions.swift */,
 				BC3DF47125DDADD3004A8F91 /* AppDelegate.swift */,
@@ -172,9 +191,56 @@
 			path = "Core Data";
 			sourceTree = "<group>";
 		};
+		BC5D0F842632228500B57032 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				BC5D0F85263222D300B57032 /* RequestSender.swift */,
+				BC5D0F89263228C100B57032 /* RequestsFactory.swift */,
+				BC5D0F8C26322F2E00B57032 /* PixabayParser.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		BC5D0F94263244C300B57032 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				BC885F8F262E9D0700912470 /* Images.storyboard */,
+				BC5D0F542630A60300B57032 /* ImagesCollectionViewCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		BC5D0F96263244D200B57032 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				BC5D0F582631961D00B57032 /* Images.swift */,
+				BC5D0F5B26319A7B00B57032 /* NetworkImage.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		BC885F89262E964A00912470 /* Images Screen */ = {
+			isa = PBXGroup;
+			children = (
+				BC885F8D262E966200912470 /* Controller */,
+				BC5D0F94263244C300B57032 /* View */,
+				BC5D0F96263244D200B57032 /* Model */,
+			);
+			path = "Images Screen";
+			sourceTree = "<group>";
+		};
+		BC885F8D262E966200912470 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				BC885F8A262E965A00912470 /* ImagesCollectionViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
 		BCC9A8D2262624F100A54518 /* Core Layer */ = {
 			isa = PBXGroup;
 			children = (
+				BC5D0F842632228500B57032 /* Network */,
 				BC556C692610DE6B0094C23F /* Core Data */,
 			);
 			path = "Core Layer";
@@ -186,6 +252,7 @@
 				BCD2F6332628EE290036329C /* Channels Screen */,
 				BCD2F6362628EE660036329C /* Messages Screen */,
 				BCC9A8D52626259100A54518 /* Profile Screen */,
+				BC885F89262E964A00912470 /* Images Screen */,
 				BCD2F64A2628FC4E0036329C /* Themes Screen */,
 			);
 			path = "Presentation Layer";
@@ -196,7 +263,7 @@
 			children = (
 				BCD2F65A262909CD0036329C /* CoreDataService.swift */,
 				BC369163261D76C600E613C2 /* DataController.swift */,
-				BC92234F26126A6300B54A2E /* FirestoreStack.swift */,
+				BC5D0F902632353600B57032 /* NetworkService.swift */,
 			);
 			path = "Service Layer";
 			sourceTree = "<group>";
@@ -394,6 +461,7 @@
 				BC285E0B25F03873008AFE06 /* MessageCellOutgoing.xib in Resources */,
 				BCFE775C262630DA00E73EB9 /* Profile.storyboard in Resources */,
 				BCD2F6392628EEC00036329C /* Conversation.storyboard in Resources */,
+				BC885F90262E9D0700912470 /* Images.storyboard in Resources */,
 				BC3DF47B25DDADD4004A8F91 /* Assets.xcassets in Resources */,
 				BC3DF47925DDADD3004A8F91 /* Themes.storyboard in Resources */,
 			);
@@ -471,20 +539,28 @@
 				BC77955025F80D0300914386 /* ThemesViewController.swift in Sources */,
 				BC77955A25F8364D00914386 /* ThemeAppearanceView.swift in Sources */,
 				BCC0976C25F007AC00C63BF7 /* ConversationCell.swift in Sources */,
+				BC885F8B262E965A00912470 /* ImagesCollectionViewController.swift in Sources */,
 				BCF13CAE2603FA8700F866FC /* ProfileLogoView.swift in Sources */,
+				BC5D0F912632353600B57032 /* NetworkService.swift in Sources */,
+				BC5D0FAA263249E400B57032 /* Images.swift in Sources */,
 				BCD2F65B262909CD0036329C /* CoreDataService.swift in Sources */,
 				BCC0974325EEC0DC00C63BF7 /* ConversationViewController.swift in Sources */,
 				BC556C6E2610EC890094C23F /* CoreDataStack.swift in Sources */,
 				BC92235026126A6300B54A2E /* FirestoreStack.swift in Sources */,
 				BC1015DE2601B4EB006F63AC /* ProfileViewController.swift in Sources */,
 				BC92234D26126A2B00B54A2E /* ObjectExtensions.swift in Sources */,
+				BC5D0FAD263249EA00B57032 /* NetworkImage.swift in Sources */,
+				BC5D0F8D26322F2E00B57032 /* PixabayParser.swift in Sources */,
 				BCD2F6542628FF050036329C /* MessageModel.swift in Sources */,
 				BC3DF47225DDADD3004A8F91 /* AppDelegate.swift in Sources */,
 				BC6B424F25F96D1A0007EC34 /* Theme.swift in Sources */,
 				BC556C672610DE660094C23F /* Chat.xcdatamodeld in Sources */,
+				BC5D0F8A263228C100B57032 /* RequestsFactory.swift in Sources */,
 				BCD2F6572628FF7E0036329C /* FoundationExtensions.swift in Sources */,
 				BCD2F6502628FEC50036329C /* ChannelsModel.swift in Sources */,
+				BC5D0F86263222D300B57032 /* RequestSender.swift in Sources */,
 				BCF7003725EB9BF900707D65 /* ConversationsListViewController.swift in Sources */,
+				BC5D0F552630A60300B57032 /* ImagesCollectionViewCell.swift in Sources */,
 				BC285E0725F02A84008AFE06 /* MessageCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
